@@ -3,7 +3,7 @@
 ![Solar Home 3D](screenshot.png)
 
 
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-giize-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/giize)
+<p align="center"><a href="https://buymeacoffee.com/giize"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=%E2%98%95&slug=giize&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" height="60"></a></p>
 
 An animated 3D solar-house dashboard for Home Assistant. Works with **any** inverter, battery, grid meter or EV charger: you pick the Home Assistant entities yourself. Anything you leave empty is simply not shown.
 
