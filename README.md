@@ -2,6 +2,9 @@
 
 ![Solar Home 3D](screenshot.png)
 
+
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-giize-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/giize)
+
 An animated 3D solar-house dashboard for Home Assistant. Works with **any** inverter, battery, grid meter or EV charger: you pick the Home Assistant entities yourself. Anything you leave empty is simply not shown.
 
 *Version 1.0.0 · 10 languages: ไทย, English, 中文, Tiếng Việt, Español, Deutsch, 日本語, 한국어, Français, Bahasa Indonesia*
@@ -38,3 +41,8 @@ and it remembers the connection. Without a token it runs in demo mode.
 
 ## ภาษาไทย
 แดชบอร์ดบ้านโซลาร์ 3D สำหรับ Home Assistant ใช้ได้กับ inverter ทุกยี่ห้อ เลือก Entity เองในเมนู "ตั้งค่า Entity" ช่องไหนเว้นว่างจะไม่แสดงผล ติดตั้งผ่าน HACS → Custom repositories → หมวด Dashboard แล้วเพิ่มการ์ด `type: custom:solar-home-3d`
+
+
+## Support
+
+If you like this project, you can support it: [Buy me a coffee](https://buymeacoffee.com/giize)
