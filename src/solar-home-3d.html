@@ -129,7 +129,7 @@ const CFG={url:'',token:'',weather:'weather.forecast_baan',sun:'sun.sun',pre:'so
  onW:1,pvMin:30,hpMin:10,sunK:.65,bmsSign:1, // bmsSign: ใส่ -1 ถ้ากระแส JK-BMS ของคุณเป็นบวกตอนจ่ายไฟ (ค่ามาตรฐาน: บวก=ชาร์จ)
  ent:{daily:'sensor.solar_inverter_monitor_daily_energy',total:'sensor.solar_inverter_monitor_total_energy',hpow:'sensor.house_energy_monitor_house_power',hday:'sensor.solar_inverter_house_energy_monitor_daily_energy_usage',gmon:'sensor.ac_main_breaker_mea_grid_import',bcur:'sensor.jk_bms_current',ctmp:'sensor.solar_inverter_monitor_cell_temperature_average',gpow:'sensor.ac_main_breaker_phase_a_power',otmp:'sensor.n_kbaan_1_temperature',itmp:'sensor.unhphuumiphaayainbaan_temperature',ihum:'sensor.unhphuumiphaayainbaan_humidity',evd:'sensor.ev_charger_ev_daily_energy',cyc:'sensor.jk_bms_charging_cycles',dv:'sensor.jk_bms_delta_cell_voltage',brem:'sensor.battery_remain',dchg:'sensor.jk_bms_jk_bms_daily_charge',ddis:'sensor.jk_bms_jk_bms_daily_discharge'}}; // pvMin = W ขั้นต่ำที่ถือว่ามีการผลิต PV, sunK = ความสว่างแสงอาทิตย์ // % โหลดที่ทำให้เครื่องใช้ไฟฟ้าทำงาน
 try{const sv=JSON.parse(localStorage.sd||'{}'),qp=new URLSearchParams(location.search);if(qp.get('token')){sv.token=qp.get('token');if(qp.get('url'))sv.url=qp.get('url').replace(/\/$/,'');localStorage.sd=JSON.stringify(sv);history.replaceState(null,'',location.pathname+location.hash)}CFG.url=sv.url||CFG.url;CFG.token=sv.token||CFG.token}catch(e){}
-const APP_VERSION='1.3.4';
+const APP_VERSION='1.3.5';
 /* embedded in the HACS Lovelace card (same-origin srcdoc iframe): borrow HA's own auth */
 const HP=(()=>{try{return window.parent!==window&&window.parent.__sh3d_hass||null}catch(e){return null}})();
 if(HP&&HP.auth&&HP.auth.data&&HP.auth.data.access_token){CFG.token=HP.auth.data.access_token;CFG.url=window.parent.location.origin}
@@ -1477,7 +1477,7 @@ function partyEnd(){PT.st=2;people.forEach((P,i)=>{P.lw=1.2+i*.45;P.wave=1});FX.
 function pgTgt(P){const L=[];people.forEach(Q=>{if(Q!==P&&Q.mode==2)L.push(Q)});if(PT.st==1&&PT.t>3.5){L.push('S');L.push('S')}return L.length?L[(Math.random()*L.length)|0]:null}
 const tpos=T=>T==='S'?{x:CH.x,z:CH.z,k:.85}:{x:T.x,z:T.z,k:T.o.k};
 function peopleFrame(dt){const t=tm,anyP=people.some(P=>P.mode);
- if(PT.st==0){FX.pT-=dt;if(FX.pT<=0){if((ENV.n<.5||FX.forced)&&GZ.st==0)partyStart();else FX.pT=20}}else if(PT.st==1){PT.t+=dt;if(PT.t>PT.dur)partyEnd()}
+ const dP=slotDue('p',840);if(PT.st==0){if(dP&&GZ.st==0&&hour()>=7&&hour()<19&&(ENV.n<.5||FX.forced)){slotUse('p');partyStart()}}else if(PT.st==1){PT.t+=dt;if(PT.t>PT.dur)partyEnd()}
  else if(PT.st==2&&!anyP){PT.st=0}
  if(!anyP){for(let i=0;i<PJN;i++){const j=i*3;if(pjL[i]>0){pjL[i]=0;pjP[j+1]=-9}}pjG.attributes.position.needsUpdate=true;return}
  people.forEach((P,i)=>{if(!P.mode)return;const o=P.o,g=P.g;let run=0,wave=0;
@@ -1607,18 +1607,25 @@ Object.assign(RMSG,{nb:[_t("👋 สวัสดีค่ะ! เพื่อน
 const GL=[[_t("👋 สวัสดีจ้ะซันนี่!"),_t("☀️ วันนี้อากาศดีนะจ๊ะ"),_t("🍊 ป้าเอาผลไม้มาฝากจ้ะ"),_t("😊 แล้วเจอกันนะจ๊ะ")],[_t("👋 สวัสดีหลานซันนี่"),_t("🌞 บ้านนี้ไฟโซลาร์เต็มเลยนะ"),_t("😄 ลุงแวะมาเดินเล่นน่ะ"),_t("👍 ไว้เจอกันนะ")]],GKL=['🎃 Trick or Treat!',_t("👻 ขนมหรือผีหลอก!"),_t("🍬 ขอขนมหน่อยค่ะ!")];
 const GZ={st:0,t:0,kind:'',dur:20,nT:60+Math.random()*60,kT:999,nI:0,sp:0,spT:0,cd:0,act:0,list:[]},GB={t:0,P:null};
 const gwrap=a=>Math.atan2(Math.sin(a),Math.cos(a));
+// ตารางเวลามาเยือนตามนาฬิกาจริง: ทุก 30 นาที (นับจากเวลาจริง ไม่ใช่ตอนเปิดแอป) — เปิดแอปแล้วจะไม่มีใครมาทันที ต้องรอถึงรอบถัดไป
+const SLOT_S=1800,slotSt={},wallS=()=>window.WALL!=null?window.WALL:Date.now()/1000;
+function slotDue(type,off){const n=wallS(),k=Math.floor((n-off)/SLOT_S);let q=slotSt[type];if(!q){slotSt[type]={k:k,pend:0};return false}
+ if(k>q.k){q.k=k;if(n-(k*SLOT_S+off)<=240)q.pend=n+240}
+ if(q.pend>n)return true;q.pend=0;return false}
+const slotUse=type=>{if(slotSt[type])slotSt[type].pend=0};
 function gSay(P,txt){const b=$('bub3');GB.P=P;GB.t=3.3;b.textContent=txt;b.style.opacity=1}
 function gHide(){GB.t=0;const b=$('bub3');if(b)b.style.opacity=0}
 function gAbort(){GZ.st=0;GZ.act=0;guests.forEach(P=>{P.mode=0;P.g.visible=false});gHide()}
 function gWant(){if(!GZ.st||!GZ.act)return null;if(GZ.st==3&&GZ.t>2.4)return null;return GZ.kind=='k'?'hw_treat':'greet'}
-const gDay=()=>{const h=hour();return!INFO.rain&&ENV.n<.5&&h>=7.2&&h<18&&CH.cur!='sleep'},gEve=()=>{if(FX.forced)return true;const h=hour();return h>=17.5&&h<21.5&&!INFO.rain};
+const gDay=()=>{const h=hour();return!INFO.rain&&ENV.n<.5&&h>=7.2&&h<19&&CH.cur!='sleep'},gEve=()=>{const h=hour();return h>=17.5&&h<19&&!INFO.rain};
 function gStart(kind){GZ.kind=kind;GZ.st=1;GZ.t=0;GZ.sp=0;GZ.spT=.6;GZ.cd=0;GZ.act=0;GZ.list=kind=='n'?[gNb[GZ.nI++%gNb.length]]:gK;GZ.dur=kind=='n'?15+Math.random()*5:24;
  const side=0,sp=GSP.L;
  GZ.list.forEach((P,i)=>{P.o.spawn=sp;P.wait=i*1.1;P.x=sp[0]+(side?1:-1)*i*.5;P.z=sp[1]+(i-1)*.12;P.hx=-.55;P.hz=kind=='n'?4.35:3.85+i*.5;P.mode=1;P.g.position.set(P.x,0,P.z);P.g.visible=true;P.face=Math.atan2(P.hx-P.x,P.hz-P.z);P.g.rotation.y=P.face})}
 function gFrame(dt){const t=tm,L=GZ.list;
- if(GZ.st==0){GZ.nT-=dt;GZ.kT-=dt;
-  if(GZ.nT<=0){if(PT.st==0&&!FX.sl&&gDay())gStart('n');else GZ.nT=20}
-  else if(GZ.kT<=0&&FX.id=='hw'){if(PT.st==0&&gEve())gStart('k');else GZ.kT=20}}
+ const dN=slotDue('n',420),dK=slotDue('k',1260);
+ if(GZ.st==0){
+  if(dN&&PT.st==0&&!FX.sl&&gDay()){slotUse('n');gStart('n')}
+  else if(dK&&FX.id=='hw'&&PT.st==0&&gEve()){slotUse('k');gStart('k')}}
  else{GZ.t+=dt;const kid=GZ.kind=='k',sp=SP[kid?'hw_treat':'greet'];
   if(GZ.st==1){if(GZ.t>1.5)GZ.act=1;if(L.every(P=>P.mode==2)&&(GZ.t>18||Math.hypot(CH.x-sp.x,CH.z-sp.z)<.8)){GZ.st=2;GZ.t=0;GZ.spT=.5;GZ.sp=0}}
   else if(GZ.st==2){GZ.spT-=dt;
