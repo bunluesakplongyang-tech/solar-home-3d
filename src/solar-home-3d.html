@@ -129,7 +129,7 @@ const CFG={url:'',token:'',weather:'weather.forecast_baan',sun:'sun.sun',pre:'so
  onW:1,pvMin:30,hpMin:10,sunK:.65,bmsSign:1, // bmsSign: ใส่ -1 ถ้ากระแส JK-BMS ของคุณเป็นบวกตอนจ่ายไฟ (ค่ามาตรฐาน: บวก=ชาร์จ)
  ent:{daily:'sensor.solar_inverter_monitor_daily_energy',total:'sensor.solar_inverter_monitor_total_energy',hpow:'sensor.house_energy_monitor_house_power',hday:'sensor.solar_inverter_house_energy_monitor_daily_energy_usage',gmon:'sensor.ac_main_breaker_mea_grid_import',bcur:'sensor.jk_bms_current',ctmp:'sensor.solar_inverter_monitor_cell_temperature_average',gpow:'sensor.ac_main_breaker_phase_a_power',otmp:'sensor.n_kbaan_1_temperature',itmp:'sensor.unhphuumiphaayainbaan_temperature',ihum:'sensor.unhphuumiphaayainbaan_humidity',evd:'sensor.ev_charger_ev_daily_energy',cyc:'sensor.jk_bms_charging_cycles',dv:'sensor.jk_bms_delta_cell_voltage',brem:'sensor.battery_remain',dchg:'sensor.jk_bms_jk_bms_daily_charge',ddis:'sensor.jk_bms_jk_bms_daily_discharge'}}; // pvMin = W ขั้นต่ำที่ถือว่ามีการผลิต PV, sunK = ความสว่างแสงอาทิตย์ // % โหลดที่ทำให้เครื่องใช้ไฟฟ้าทำงาน
 try{const sv=JSON.parse(localStorage.sd||'{}'),qp=new URLSearchParams(location.search);if(qp.get('token')){sv.token=qp.get('token');if(qp.get('url'))sv.url=qp.get('url').replace(/\/$/,'');localStorage.sd=JSON.stringify(sv);history.replaceState(null,'',location.pathname+location.hash)}CFG.url=sv.url||CFG.url;CFG.token=sv.token||CFG.token}catch(e){}
-const APP_VERSION='1.3.2';
+const APP_VERSION='1.3.3';
 /* embedded in the HACS Lovelace card (same-origin srcdoc iframe): borrow HA's own auth */
 const HP=(()=>{try{return window.parent!==window&&window.parent.__sh3d_hass||null}catch(e){return null}})();
 if(HP&&HP.auth&&HP.auth.data&&HP.auth.data.access_token){CFG.token=HP.auth.data.access_token;CFG.url=window.parent.location.origin}
@@ -1465,9 +1465,9 @@ function mkPerson(o){const g=new T.Group();g.scale.setScalar(o.k);g.visible=fals
  else{fxS(new T.BoxGeometry(.09,.3,.14),M(o.gun),0,-.1,0,gn);fxS(new T.CylinderGeometry(.06,.06,.18,10),M('#b3e5fc',{transparent:true,opacity:.8}),0,-.04,.12,gn);fxS(new T.CylinderGeometry(.018,.018,.14,6),M('#ffffff'),0,-.3,0,gn)}
  P.ph=o.ph;if(o.cos)o.cos(P,hd,inn,sk);(o.reg||people).push(P);return P}
 {const fl=floralT;
- const a=mkPerson({k:.72,home:[-1.0,4.65],dh:[1.85,4.2],spawn:[-6.6,6.2],R:.5,w:.7,ph:0,spd:2.1,skin:'#e8b88f',map:fl,pants:'#37474f',hair:'#3e2723',style:'bun',flower:'#ff4081',garland:1,gun:'#ff5252',shoe:'#ec407a',powder:1}),
-  b=mkPerson({k:.52,hs:1.1,home:[-.05,5.5],dh:[3.55,4.2],spawn:[6.6,6.5],R:.42,w:.95,ph:1.6,spd:2.5,skin:'#f0c29a',shirt:'#ffd54f',pants:'#1565c0',hair:'#212121',style:'tuft',gun:'#4caf50',shoe:'#26c6da',powder:1}),
-  c=mkPerson({k:.74,belly:1,home:[.75,4.85],dh:[3.0,4.3],spawn:[1.6,8.4],R:.38,w:.6,ph:3.1,spd:1.9,skin:'#d9a273',shirt:'#ef6c00',map:fl,pants:'#263238',hair:'#9e9e9e',hair2:1,style:'grey',glasses:1,stache:1,bucket:1,shoe:'#ffb300',powder:1});
+ const a=mkPerson({k:.72,home:[-1.0,4.65],dh:[1.15,5.9],spawn:[-6.6,6.2],R:.5,w:.7,ph:0,spd:2.1,skin:'#e8b88f',map:fl,pants:'#37474f',hair:'#3e2723',style:'bun',flower:'#ff4081',garland:1,gun:'#ff5252',shoe:'#ec407a',powder:1}),
+  b=mkPerson({k:.52,hs:1.1,home:[-.05,5.5],dh:[3.35,5.85],spawn:[6.6,6.5],R:.42,w:.95,ph:1.6,spd:2.5,skin:'#f0c29a',shirt:'#ffd54f',pants:'#1565c0',hair:'#212121',style:'tuft',gun:'#4caf50',shoe:'#26c6da',powder:1}),
+  c=mkPerson({k:.74,belly:1,home:[.75,4.85],dh:[2.75,6.05],spawn:[1.6,8.4],R:.38,w:.6,ph:3.1,spd:1.9,skin:'#d9a273',shirt:'#ef6c00',map:fl,pants:'#263238',hair:'#9e9e9e',hair2:1,style:'grey',glasses:1,stache:1,bucket:1,shoe:'#ffb300',powder:1});
  a.tgt=b;b.tgt=a;c.tgt=a}
 const fireDrop=(P,tx,ty,tz,T,sp,vy)=>{const i=pjI++%PJN,j=i*3,ya=P.face,k=P.o.k;pjP[j]=P.x+Math.sin(ya)*.4*k;pjP[j+1]=(P.o.bucket?.78:.88)*k;pjP[j+2]=P.z+Math.cos(ya)*.4*k;
  pjV[j]=(tx-pjP[j])/T+(Math.random()-.5)*sp;pjV[j+1]=(ty-pjP[j+1])/T+4.9*T+(vy||0);pjV[j+2]=(tz-pjP[j+2])/T+(Math.random()-.5)*sp;pjL[i]=T+1.2};
@@ -1524,7 +1524,7 @@ mkPagoda(-1.9,5.0,1,0);mkPagoda(-1.15,5.5,.72,1.1);mkPagoda(-2.55,5.55,.55,2.4);
 {const pc=['#ff4081','#00bcd4','#ffeb3b','#76ff03','#ff9800','#7c4dff'],A=[-1.9,.5,5.0],B=[-1.15,.45,5.5],C=[-2.55,.4,5.55],tg=new T.CircleGeometry(.07,3);
  [[A,B],[A,C]].forEach(([a,b])=>{for(let i=1;i<9;i++){const u=i/9,x=a[0]+(b[0]-a[0])*u,z=a[2]+(b[2]-a[2])*u,y=a[1]+(b[1]-a[1])*u-.12*4*u*(1-u),m=new T.Mesh(tg,fxBM(pc[(i+(a===A&&b===C?2:0))%6],{side:T.DoubleSide}));m.position.set(x,y-.04,z);m.rotation.z=Math.PI;m.rotation.y=Math.atan2(b[2]-a[2],b[0]-a[0]);fxg.sk.add(m)}})}
 // ชุดลำโพงเครื่องเสียงเปิดเพลง
-const SPK={x:3.05,z:3.3},spkG=new T.Group(),spkW=[],spkL=[],spkN=[];spkG.position.set(SPK.x,0,SPK.z);spkG.rotation.y=-.35;spkG.scale.setScalar(.82);fxg.sk.add(spkG);
+const SPK={x:2.25,z:5.0},spkG=new T.Group(),spkW=[],spkL=[],spkN=[];spkG.position.set(SPK.x,0,SPK.z);spkG.rotation.y=-.3;spkG.scale.setScalar(.82);fxg.sk.add(spkG);
 {const cab=M('#1d2230',{roughness:.5,metalness:.3}),ring=M('#9aa4b5',{metalness:.7,roughness:.3}),cone=M('#0d0f16'),rg=['#ff4081','#00e5ff','#ffea00','#76ff03'];
  [-1,1].forEach((s,si)=>{const sp=new T.Group();sp.position.set(s*.95,0,0);spkG.add(sp);rbx(.52,.98,.46,cab,0,.52,0,sp,.05);rbx(.54,.04,.48,M('#2b3244'),0,1.02,0,sp,.02);
   const mk=(r,y,ci)=>{const w=new T.Group();w.position.set(0,y,.235);sp.add(w);fxS(new T.TorusGeometry(r,r*.14,8,24),ring,0,0,0,w);const c=fxS(new T.SphereGeometry(r*.9,16,10,0,Math.PI*2,0,Math.PI/2),cone,0,0,0,w);c.rotation.x=Math.PI/2;c.scale.set(1,1,.45);fxS(new T.SphereGeometry(r*.28,10,8),ring,0,0,.02,w).scale.z=.5;
@@ -1601,7 +1601,7 @@ const gNb=[gP({k:.78,skin:'#e8b88f',shirt:'#ec407a',pants:'#5d4037',hair:'#3e272
 const gK=[gP({k:.5,hs:1.12,skin:'#f0c29a',shirt:'#ffffff',pants:'#cfd8dc',hair:'#5d4037',shoe:'#ffffff',ph:0,bag:1,spd:1.35,cos:gcos.ghost}),
  gP({k:.52,hs:1.1,skin:'#e8b88f',shirt:'#6a1b9a',pants:'#4a148c',hair:'#e65100',shoe:'#2b2038',ph:1.7,bag:1,spd:1.3,cos:gcos.witch}),
  gP({k:.54,hs:1.1,belly:1,skin:'#d9a273',shirt:'#ff8f1f',pants:'#2e7d32',hair:'#3e2723',shoe:'#4e342e',ph:3.2,bag:1,spd:1.25,cos:gcos.pumpkin})];
-Object.assign(SP,{greet:{x:.45,z:4.35,face:[-.55,4.35],pose:'wave'},hw_treat:{x:.45,z:4.35,face:[-.55,4.35],pose:'scatter'},sk_dance:{x:2.45,z:4.05,dir:[0,1],pose:'jack'}});
+Object.assign(SP,{greet:{x:.45,z:4.35,face:[-.55,4.35],pose:'wave'},hw_treat:{x:.45,z:4.35,face:[-.55,4.35],pose:'scatter'},sk_dance:{x:1.95,z:5.8,dir:[0,1],pose:'jack'}});
 Object.assign(ACT,{greet:[_t("👋 สวัสดีค่ะเพื่อนบ้าน!"),_t("😊 ขอบคุณที่แวะมานะคะ")],hw_treat:[_t("🍬 Trick or Treat! แจกขนมให้เด็กๆ"),_t("👻 เด็กๆ แต่งตัวน่ารักจัง")],sk_dance:[_t("💃 เต้นรำหน้าลำโพงกับเพื่อนบ้าน!"),_t("🎶 เพลงมันส์ ขยับตัวๆ"),_t("🕺 เต้นสนุกจัง ซันนี่ไม่หยุดเลย")]});
 Object.assign(RMSG,{nb:[_t("👋 สวัสดีค่ะ! เพื่อนบ้านแวะมาทักทาย"),_t("🌞 ไฟโซลาร์ผลิตเต็มที่เลยค่ะ"),_t("🍊 ขอบคุณสำหรับของฝากนะคะ"),_t("😊 แวะมาใหม่นะคะ แล้วเจอกัน!")],tk:[_t("🍬 แจกขนมให้เด็กๆ แล้วจ้า"),_t("🎃 Happy Halloween จ้า!"),_t("🦇 ชุดน่ารักทุกคนเลย ขนมเยอะๆ นะ")]});
 const GL=[[_t("👋 สวัสดีจ้ะซันนี่!"),_t("☀️ วันนี้อากาศดีนะจ๊ะ"),_t("🍊 ป้าเอาผลไม้มาฝากจ้ะ"),_t("😊 แล้วเจอกันนะจ๊ะ")],[_t("👋 สวัสดีหลานซันนี่"),_t("🌞 บ้านนี้ไฟโซลาร์เต็มเลยนะ"),_t("😄 ลุงแวะมาเดินเล่นน่ะ"),_t("👍 ไว้เจอกันนะ")]],GKL=['🎃 Trick or Treat!',_t("👻 ขนมหรือผีหลอก!"),_t("🍬 ขอขนมหน่อยค่ะ!")];
@@ -1646,7 +1646,7 @@ function fxUI(){const id=FX.id,c=$('fchip');if(c){c.className=id?'on':'';c.textC
 function fxSet(id){FX.id=id;FX.signT=id?10:0;FX.forced=FMODE!='auto'&&FMODE!='off';FX.yr=festInfo().yr||nowD().getFullYear();FIDS.forEach(k=>{fxg[k].visible=k==id;sunHats[k].visible=catHats[k].visible=k==id});birds.forEach(b=>b.g.visible=id!='hw');
  garland.visible=id=='sk';vampB.visible=id=='hw';hairM.color.set(id=='hw'?'#0e0b14':'#4e342e');shirt.map=id=='sk'?floralT:null;shirt.color.set(id=='sk'?'#ffffff':id=='hw'?'#2b2140':'#6ea8e6');shirt.needsUpdate=true;if(GZ.st&&GZ.kind=='k'&&id!='hw')gAbort();GZ.kT=id=='hw'?(FX.forced?6:30+Math.random()*30):999;signDraw(id);fxPSet(id);
  FX.obs.forEach(o=>{const i=OBS.indexOf(o);if(i>=0)OBS.splice(i,1)});FX.nodes.forEach(n=>{const i=NODES.indexOf(n);if(i>=0)NODES.splice(i,1)});FX.obs=[];FX.nodes=[];
- const ob=id=='xm'?[[XT.x-.7,XT.x+.7,XT.z-.7,XT.z+.7],[SM.x-.55,SM.x+.55,SM.z-.55,SM.z+.55]]:id=='cny'?[[CK.x-.3,CK.x+.75,CK.z-.3,CK.z+.3],[1.5,1.9,4.8,5.2],[-1.8,-1.4,5.15,5.55]]:id=='sk'?[[-3.3,-.9,4.5,6.1],[2.2,3.9,2.7,3.9]]:id=='hw'?[[-4.7,-1.4,5.0,7.4],[SC.x-.5,SC.x+.5,SC.z-.45,SC.z+.45]]:[];
+ const ob=id=='xm'?[[XT.x-.7,XT.x+.7,XT.z-.7,XT.z+.7],[SM.x-.55,SM.x+.55,SM.z-.55,SM.z+.55]]:id=='cny'?[[CK.x-.3,CK.x+.75,CK.z-.3,CK.z+.3],[1.5,1.9,4.8,5.2],[-1.8,-1.4,5.15,5.55]]:id=='sk'?[[-3.3,-.9,4.5,6.1],[1.4,3.1,4.6,5.4]]:id=='hw'?[[-4.7,-1.4,5.0,7.4],[SC.x-.5,SC.x+.5,SC.z-.45,SC.z+.45]]:[];
  ob.forEach(o=>{OBS.push(o);FX.obs.push(o);const[a,b,c,d]=o;[[a-.25,c-.25],[b+.25,c-.25],[a-.25,d+.25],[b+.25,d+.25]].forEach(p=>{NODES.push(p);FX.nodes.push(p)})});
  for(const k in DAYP)delete DAYP[k];FX.gT=id?4:0;FX.sl=null;FX.slT=id=='xm'?(FX.forced?3:20):99;FX.fwT=2;FX.ckT=id=='cny'?(FX.forced?6:14):99;FX.ck=null;FX.crazy=0;FX.cd=-9;PT.st=0;FX.sw=0;FX.pT=id=='sk'?(FX.forced?2.5:10+Math.random()*30):99;people.forEach(P=>{P.mode=0;P.g.visible=false});sleigh.visible=false;snt.visible=false;slS.visible=true;dg.visible=false;dg.scale.setScalar(.001);dg.userData.pt=null;fxUI()}
 let slI=0;
