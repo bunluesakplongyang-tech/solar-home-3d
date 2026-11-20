@@ -6,7 +6,7 @@
 
 An animated 3D solar-house dashboard for Home Assistant. Works with **any** inverter, battery, grid meter or EV charger: you pick the Home Assistant entities yourself. Anything you leave empty is simply not shown.
 
-*Version 1.2.0 · 10 languages: ไทย, English, 中文, Tiếng Việt, Español, Deutsch, 日本語, 한국어, Français, Bahasa Indonesia*
+*Version 1.3.0 · 10 languages: ไทย, English, 中文, Tiếng Việt, Español, Deutsch, 日本語, 한국어, Français, Bahasa Indonesia*
 
 ## Features
 - 3D house with PV, battery, load, grid (import / export) and EV energy-flow lines
@@ -15,7 +15,10 @@ An animated 3D solar-house dashboard for Home Assistant. Works with **any** inve
 - Weather scene (rain, fog, snow, thunder, day/night) driven by your `weather.*` entity
 - "Sunny", the little character, comments on what your system is doing
 - Festivals that follow the real calendar (New Year, Chinese New Year, Halloween, Christmas, Songkran): decorations, fireworks, Santa's sleigh, ghosts and water splashes, and Sunny joins in. Pick one in the ⚙ menu to preview it any day, or switch festivals off
-- Christmas: a snowman, and Santa who lands his sleigh above the roof, sneaks down the chimney and leaves a gift under the tree. Songkran: neighbours playing a water fight in the yard
+- Christmas: a snowman, a decorated tree, string lights along the eaves, gables and ridge, and a spinning ornament mobile on the roof; Santa lands his sleigh above the roof, sneaks down the chimney and leaves a gift under the tree
+- Songkran: three cute neighbours drop by at random times for a water fight (Sunny joins in), plus sand pagodas with flags and a speaker set playing music
+- Chinese New Year: a Chinese dragon chasing its pearl across the sky, fireworks by day and night, fountain sparklers and a hand-held sparkler for Sunny
+- Halloween: bats instead of birds, a scarecrow with a crow on its shoulder, and many styles of gravestones inside an iron fence
 - Random shooting stars on clear nights, every day of the year
 - EV charging ring animation under the car, and a fountain in the fish pond
 - Language picker (auto-detects from the browser)
