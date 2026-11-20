@@ -6,7 +6,7 @@
 
 An animated 3D solar-house dashboard for Home Assistant. Works with **any** inverter, battery, grid meter or EV charger: you pick the Home Assistant entities yourself. Anything you leave empty is simply not shown.
 
-*Version 1.3.3 · 10 languages: ไทย, English, 中文, Tiếng Việt, Español, Deutsch, 日本語, 한국어, Français, Bahasa Indonesia*
+*Version 1.3.4 · 10 languages: ไทย, English, 中文, Tiếng Việt, Español, Deutsch, 日本語, 한국어, Français, Bahasa Indonesia*
 
 ## Features
 - 3D house with PV, battery, load, grid (import / export) and EV energy-flow lines
@@ -19,7 +19,7 @@ An animated 3D solar-house dashboard for Home Assistant. Works with **any** inve
 - Songkran: every 5 minutes three cute neighbours come for either a water fight or a dance party in front of the speakers next to the mailbox (Sunny joins in), plus sand pagodas with flags
 - Chinese New Year: a Chinese dragon chasing its pearl across the sky, fireworks by day and night, fountain sparklers and a hand-held sparkler for Sunny
 - Halloween: Sunny dresses up as a vampire, bats instead of birds, a glowing pumpkin-head scarecrow with a crow, many styles of gravestones, and costumed kids coming for Trick or Treat every 5 minutes in the evening
-- Neighbours drop by every 15 minutes to chat with Sunny; the festival banner on the roof only shows briefly when the app opens
+- Neighbours drop by every 30 minutes to chat with Sunny; the festival banner on the roof only shows briefly when the app opens
 - Random shooting stars on clear nights, every day of the year
 - EV charging ring animation under the car, and a fountain in the fish pond
 - Language picker (auto-detects from the browser)
