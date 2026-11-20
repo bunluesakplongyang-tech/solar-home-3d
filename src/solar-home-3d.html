@@ -129,7 +129,7 @@ const CFG={url:'',token:'',weather:'weather.forecast_baan',sun:'sun.sun',pre:'so
  onW:1,pvMin:30,hpMin:10,sunK:.65,bmsSign:1, // bmsSign: ใส่ -1 ถ้ากระแส JK-BMS ของคุณเป็นบวกตอนจ่ายไฟ (ค่ามาตรฐาน: บวก=ชาร์จ)
  ent:{daily:'sensor.solar_inverter_monitor_daily_energy',total:'sensor.solar_inverter_monitor_total_energy',hpow:'sensor.house_energy_monitor_house_power',hday:'sensor.solar_inverter_house_energy_monitor_daily_energy_usage',gmon:'sensor.ac_main_breaker_mea_grid_import',bcur:'sensor.jk_bms_current',ctmp:'sensor.solar_inverter_monitor_cell_temperature_average',gpow:'sensor.ac_main_breaker_phase_a_power',otmp:'sensor.n_kbaan_1_temperature',itmp:'sensor.unhphuumiphaayainbaan_temperature',ihum:'sensor.unhphuumiphaayainbaan_humidity',evd:'sensor.ev_charger_ev_daily_energy',cyc:'sensor.jk_bms_charging_cycles',dv:'sensor.jk_bms_delta_cell_voltage',brem:'sensor.battery_remain',dchg:'sensor.jk_bms_jk_bms_daily_charge',ddis:'sensor.jk_bms_jk_bms_daily_discharge'}}; // pvMin = W ขั้นต่ำที่ถือว่ามีการผลิต PV, sunK = ความสว่างแสงอาทิตย์ // % โหลดที่ทำให้เครื่องใช้ไฟฟ้าทำงาน
 try{const sv=JSON.parse(localStorage.sd||'{}'),qp=new URLSearchParams(location.search);if(qp.get('token')){sv.token=qp.get('token');if(qp.get('url'))sv.url=qp.get('url').replace(/\/$/,'');localStorage.sd=JSON.stringify(sv);history.replaceState(null,'',location.pathname+location.hash)}CFG.url=sv.url||CFG.url;CFG.token=sv.token||CFG.token}catch(e){}
-const APP_VERSION='1.3.5';
+const APP_VERSION='1.3.6';
 /* embedded in the HACS Lovelace card (same-origin srcdoc iframe): borrow HA's own auth */
 const HP=(()=>{try{return window.parent!==window&&window.parent.__sh3d_hass||null}catch(e){return null}})();
 if(HP&&HP.auth&&HP.auth.data&&HP.auth.data.access_token){CFG.token=HP.auth.data.access_token;CFG.url=window.parent.location.origin}
@@ -1675,7 +1675,7 @@ function festFrame(dt){const id=festId();if(id!==FX.id)fxSet(id);FX.t+=dt;shootF
  if(id=='xm'){const st=xmTree.userData.star;st.rotation.y=tm*1.6;st.scale.setScalar(1+.1*Math.sin(tm*4));xmGlow.material.opacity=.06+.4*night;xmLanFrame(night);
   xmTree.userData.gifts.forEach((q,i)=>{const op=cur=='xm_gift'&&still;q.lid.position.y=q.y+(op?Math.abs(Math.sin(tm*3.1+i*1.7))*.1:0);q.lid.rotation.z=op?Math.sin(tm*3.1+i*1.7)*.35:0});
   {const wv=cur=='xm_snow'&&still||(tm%11)<2.2,r=smArm[0];smG.rotation.z=Math.sin(tm*1.1)*.02;smArm.forEach(q=>{q.g.rotation.z=q.s*(.35+(q.s>0&&wv?.55+Math.sin(tm*7)*.25:0))});smG.userData.hd.rotation.y=Math.sin(tm*.8)*.25}
-  FX.slT-=dt;if(!FX.sl&&FX.slT<=0&&(night>.3||FX.forced)){FX.sl={t:0,dur:19.2,az:OB.az};sleigh.visible=true}
+  const dS=slotDue('s',1500);if(!FX.sl&&dS&&(night>.3||FX.forced)){slotUse('s');FX.sl={t:0,dur:19.2,az:OB.az};sleigh.visible=true}
   if(FX.sl){santaVisit(dt);const j=(slI++%60)*3;slP[j]=sleigh.position.x-Math.sin(sleigh.rotation.y)*1.7+Math.random()*.3;slP[j+1]=sleigh.position.y+.3+Math.random()*.4;slP[j+2]=sleigh.position.z-Math.cos(sleigh.rotation.y)*1.7+Math.random()*.3;slA[j/3]=1}
   for(let i=0;i<60;i++){slA[i]=Math.max(0,slA[i]-dt/1.3);slP[i*3+1]-=dt*.35*(slA[i]>0);const a=slA[i];slC[i*3]=a;slC[i*3+1]=a*.82;slC[i*3+2]=a*.4;if(a<=0)slP[i*3+1]=-9}slT.attributes.position.needsUpdate=true;slT.attributes.color.needsUpdate=true}
  else if(id=='ny'||id=='cny'){
