@@ -6,7 +6,7 @@
 
 An animated 3D solar-house dashboard for Home Assistant. Works with **any** inverter, battery, grid meter or EV charger: you pick the Home Assistant entities yourself. Anything you leave empty is simply not shown.
 
-*Version 1.1.1 · 10 languages: ไทย, English, 中文, Tiếng Việt, Español, Deutsch, 日本語, 한국어, Français, Bahasa Indonesia*
+*Version 1.2.0 · 10 languages: ไทย, English, 中文, Tiếng Việt, Español, Deutsch, 日本語, 한국어, Français, Bahasa Indonesia*
 
 ## Features
 - 3D house with PV, battery, load, grid (import / export) and EV energy-flow lines
@@ -15,6 +15,8 @@ An animated 3D solar-house dashboard for Home Assistant. Works with **any** inve
 - Weather scene (rain, fog, snow, thunder, day/night) driven by your `weather.*` entity
 - "Sunny", the little character, comments on what your system is doing
 - Festivals that follow the real calendar (New Year, Chinese New Year, Halloween, Christmas, Songkran): decorations, fireworks, Santa's sleigh, ghosts and water splashes, and Sunny joins in. Pick one in the ⚙ menu to preview it any day, or switch festivals off
+- Christmas: a snowman, and Santa who lands his sleigh above the roof, sneaks down the chimney and leaves a gift under the tree. Songkran: neighbours playing a water fight in the yard
+- Random shooting stars on clear nights, every day of the year
 - EV charging ring animation under the car, and a fountain in the fish pond
 - Language picker (auto-detects from the browser)
 
