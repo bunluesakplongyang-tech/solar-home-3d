@@ -6,7 +6,7 @@
 
 An animated 3D solar-house dashboard for Home Assistant. Works with **any** inverter, battery, grid meter or EV charger: you pick the Home Assistant entities yourself. Anything you leave empty is simply not shown.
 
-*Version 1.3.1 · 10 languages: ไทย, English, 中文, Tiếng Việt, Español, Deutsch, 日本語, 한국어, Français, Bahasa Indonesia*
+*Version 1.3.2 · 10 languages: ไทย, English, 中文, Tiếng Việt, Español, Deutsch, 日本語, 한국어, Français, Bahasa Indonesia*
 
 ## Features
 - 3D house with PV, battery, load, grid (import / export) and EV energy-flow lines
@@ -16,7 +16,7 @@ An animated 3D solar-house dashboard for Home Assistant. Works with **any** inve
 - "Sunny", the little character, comments on what your system is doing
 - Festivals that follow the real calendar (New Year, Chinese New Year, Halloween, Christmas, Songkran): decorations, fireworks, Santa's sleigh, ghosts and water splashes, and Sunny joins in. Pick one in the ⚙ menu to preview it any day, or switch festivals off
 - Christmas: a snowman, a decorated tree, string lights along the eaves, gables and ridge, and glowing lanterns hanging from the front eave; Santa visits every 5 minutes, sneaks down the chimney and leaves a gift under the tree
-- Songkran: every 5 minutes three cute neighbours come for either a water fight or a dance party in front of the speakers (Sunny joins in), plus sand pagodas with flags
+- Songkran: every 5 minutes three cute neighbours come for either a water fight or a dance party in front of the speakers next to the mailbox (Sunny joins in), plus sand pagodas with flags
 - Chinese New Year: a Chinese dragon chasing its pearl across the sky, fireworks by day and night, fountain sparklers and a hand-held sparkler for Sunny
 - Halloween: Sunny dresses up as a vampire, bats instead of birds, a glowing pumpkin-head scarecrow with a crow, many styles of gravestones, and costumed kids coming for Trick or Treat every 5 minutes in the evening
 - Neighbours drop by every 15 minutes to chat with Sunny; the festival banner on the roof only shows briefly when the app opens
