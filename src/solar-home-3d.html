@@ -129,7 +129,7 @@ const CFG={url:'',token:'',weather:'weather.forecast_baan',sun:'sun.sun',pre:'so
  onW:1,pvMin:30,hpMin:10,sunK:.65,bmsSign:1, // bmsSign: ใส่ -1 ถ้ากระแส JK-BMS ของคุณเป็นบวกตอนจ่ายไฟ (ค่ามาตรฐาน: บวก=ชาร์จ)
  ent:{daily:'sensor.solar_inverter_monitor_daily_energy',total:'sensor.solar_inverter_monitor_total_energy',hpow:'sensor.house_energy_monitor_house_power',hday:'sensor.solar_inverter_house_energy_monitor_daily_energy_usage',gmon:'sensor.ac_main_breaker_mea_grid_import',bcur:'sensor.jk_bms_current',ctmp:'sensor.solar_inverter_monitor_cell_temperature_average',gpow:'sensor.ac_main_breaker_phase_a_power',otmp:'sensor.n_kbaan_1_temperature',itmp:'sensor.unhphuumiphaayainbaan_temperature',ihum:'sensor.unhphuumiphaayainbaan_humidity',evd:'sensor.ev_charger_ev_daily_energy',cyc:'sensor.jk_bms_charging_cycles',dv:'sensor.jk_bms_delta_cell_voltage',brem:'sensor.battery_remain',dchg:'sensor.jk_bms_jk_bms_daily_charge',ddis:'sensor.jk_bms_jk_bms_daily_discharge'}}; // pvMin = W ขั้นต่ำที่ถือว่ามีการผลิต PV, sunK = ความสว่างแสงอาทิตย์ // % โหลดที่ทำให้เครื่องใช้ไฟฟ้าทำงาน
 try{const sv=JSON.parse(localStorage.sd||'{}'),qp=new URLSearchParams(location.search);if(qp.get('token')){sv.token=qp.get('token');if(qp.get('url'))sv.url=qp.get('url').replace(/\/$/,'');localStorage.sd=JSON.stringify(sv);history.replaceState(null,'',location.pathname+location.hash)}CFG.url=sv.url||CFG.url;CFG.token=sv.token||CFG.token}catch(e){}
-const APP_VERSION='1.3.8';
+const APP_VERSION='1.3.9';
 /* embedded in the HACS Lovelace card (same-origin srcdoc iframe): borrow HA's own auth */
 const HP=(()=>{try{return window.parent!==window&&window.parent.__sh3d_hass||null}catch(e){return null}})();
 if(HP&&HP.auth&&HP.auth.data&&HP.auth.data.access_token){CFG.token=HP.auth.data.access_token;CFG.url=window.parent.location.origin}
@@ -1185,21 +1185,57 @@ const XT={x:2.0,z:2.5},xmTree=new T.Group();xmTree.position.set(XT.x,0,XT.z);xmT
   const lid=new T.Group();lid.position.y=h/2+.01;g.add(lid);fxS(new T.BoxGeometry(w+.04,.05,w+.04),M(c),0,.02,0,lid);fxS(new T.SphereGeometry(.05,6,5),fxEM('#ffd54f',.3),0,.08,0,lid);xmTree.userData.gifts.push({g,lid,y:h/2+.01})})}
 fxRoof('xm',['#ff5252','#ffd54f','#4fc3f7','#69f0ae','#ff80ab'],{ridge:1});
 const xmGlow=new T.Sprite(new T.SpriteMaterial({map:HALOT,color:'#ffd9a0',blending:T.AdditiveBlending,transparent:true,opacity:0,depthWrite:false,fog:false}));xmGlow.position.set(XT.x,1.0,XT.z);xmGlow.scale.setScalar(3.2);fxg.xm.add(xmGlow);
-// ----- 🏮 โคมไฟห้อยชายคาหน้าบ้าน (คริสต์มาส) -----
+// ----- 🎄 โคมไฟห้อยชายคาหน้าบ้าน ชั้น 1+2 (คริสต์มาส): เกล็ดหิมะ / ถุงเท้า / ต้นคริสต์มาส / กวางเรนเดียร์ / ซานต้า -----
 const xmLan=[];
-function mkXLantern(x,y,z,s,ph,col){const g=new T.Group();g.position.set(x,y,z);g.scale.setScalar(s);fxg.xm.add(g);
- const gold=M('#c9a227',{metalness:.55,roughness:.4}),body=M(col,{roughness:.5}),gl=M('#ffd98a',{emissive:'#ffb74d',emissiveIntensity:.4,transparent:true,opacity:.82,roughness:.3});
+function mkXLantern(x,y,z,s,ph,type){const g=new T.Group();g.position.set(x,y,z);g.scale.setScalar(s);fxg.xm.add(g);
+ const gold=M('#c9a227',{metalness:.55,roughness:.4}),gls=[],eg=(c,e,o)=>{const m=fxEM(c,e,o);m.userData.eb=e;gls.push(m);return m},sw=new T.Group();sw.position.y=-.45;g.add(sw);
  fxS(new T.CylinderGeometry(.006,.006,.2,4),gold,0,-.1,0,g);fxS(new T.TorusGeometry(.03,.007,5,10),gold,0,-.21,0,g);
- fxS(new T.ConeGeometry(.13,.1,6),body,0,-.28,0,g);fxS(new T.CylinderGeometry(.13,.13,.025,6),gold,0,-.33,0,g);
- fxS(new T.CylinderGeometry(.1,.1,.24,6),gl,0,-.46,0,g);
- for(let i=0;i<6;i++){const a=i/6*Math.PI*2+Math.PI/6;fxS(new T.CylinderGeometry(.008,.008,.25,4),gold,Math.cos(a)*.1,-.46,Math.sin(a)*.1,g)}
- fxS(new T.CylinderGeometry(.11,.095,.04,6),body,0,-.59,0,g);fxS(new T.SphereGeometry(.025,6,5),gold,0,-.63,0,g);
- fxS(new T.SphereGeometry(.05,8,6),fxBM('#fff1c4'),0,-.46,0,g);
- [-1,1].forEach(sd=>{fxS(new T.SphereGeometry(.05,6,5),M('#2e7d32'),sd*.055,-.235,.04,g).scale.set(1.5,.4,1)});[[-.02,.0],[.025,.01],[0,.03]].forEach(([a,b])=>fxS(new T.SphereGeometry(.018,5,4),M('#d32f2f'),a,-.225+b,.07,g));
- const hm=new T.SpriteMaterial({map:HALOT,color:'#ffb74d',blending:T.AdditiveBlending,transparent:true,opacity:0,depthWrite:false,fog:false}),h=new T.Sprite(hm);h.position.set(0,-.46,0);h.scale.setScalar(1.1);g.add(h);
- xmLan.push({g,gl,hm,ph})}
-[-1.52,-.76,0,.76,1.52].forEach((x,i)=>mkXLantern(x,4.33,2.0,1.3,i*1.3,i%2?'#2e7d32':'#c62828'));
-function xmLanFrame(night){xmLan.forEach(q=>{const k=.85+.15*Math.sin(tm*7+q.ph)*Math.sin(tm*2.3+q.ph*2);q.g.rotation.z=Math.sin(tm*1.2+q.ph)*.06;q.g.rotation.x=Math.cos(tm*1.0+q.ph)*.035;q.gl.emissiveIntensity=(.35+1.1*night)*k;q.hm.opacity=(.12+.55*night)*k})}
+ let hc='#ffb74d',hs=1.1,spin=0;
+ if(type=='snow'){hc='#8fd3ff';hs=1.2;spin=1;
+  const ic=eg('#e8f8ff',.9,{roughness:.25});
+  fxS(new T.CylinderGeometry(.215,.215,.012,18),eg('#9fd8ff',.5,{transparent:true,opacity:.32,roughness:.3}),0,0,-.012,sw).rotation.x=Math.PI/2;
+  for(let k=0;k<3;k++)fxS(new T.BoxGeometry(.4,.022,.022),ic,0,0,0,sw).rotation.z=k*Math.PI/3;
+  for(let k=0;k<6;k++){const a=k*Math.PI/3;[[.085,.09],[.15,.065]].forEach(([d,l])=>[-1,1].forEach(sd=>{const b=a+sd*.95;fxS(new T.BoxGeometry(l,.018,.018),ic,Math.cos(a)*d+Math.cos(b)*l/2,Math.sin(a)*d+Math.sin(b)*l/2,0,sw).rotation.z=b}))}
+  fxS(new T.CylinderGeometry(.045,.045,.03,6),eg('#ffffff',1.1),0,0,0,sw).rotation.x=Math.PI/2}
+ else if(type=='sock'){
+  const rd=eg('#d32f2f',.6,{roughness:.55}),wh=eg('#fffaf0',.7,{roughness:.8}),gr=eg('#2e7d32',.6);
+  rbx(.15,.27,.1,rd,-.012,.07,0,sw,.045);rbx(.25,.12,.1,rd,.04,-.1,0,sw,.05);
+  rbx(.075,.1,.106,wh,.115,-.1,0,sw,.035);rbx(.085,.075,.106,wh,-.045,-.128,0,sw,.03);
+  rbx(.2,.075,.125,wh,-.012,.2,0,sw,.035);
+  [-1,1].forEach(sd=>fxS(new T.SphereGeometry(.04,6,5),gr,sd*.075-.012,.2,.07,sw).scale.set(1.4,.45,1));
+  [[-.03,.0],[.015,.015],[.0,-.02]].forEach(([a,b])=>fxS(new T.SphereGeometry(.018,5,4),eg('#e53935',.8),a,.215+b,.09,sw))}
+ else if(type=='tree'){hc='#9be37d';
+  const tg=eg('#2e7d32',.35,{roughness:.6});
+  fxS(new T.ConeGeometry(.2,.2,9),tg,0,-.1,0,sw);fxS(new T.ConeGeometry(.155,.18,9),tg,0,.03,0,sw);fxS(new T.ConeGeometry(.11,.16,9),tg,0,.15,0,sw);
+  fxS(new T.CylinderGeometry(.03,.035,.07,6),M('#6d4430'),0,-.23,0,sw);
+  fxS(new T.OctahedronGeometry(.045),eg('#ffd54f',1.4),0,.27,0,sw);
+  const oc=['#e53935','#ffca28','#1e88e5','#ec407a','#ffca28','#e53935'];
+  oc.forEach((c,i)=>{const u=i/oc.length,a=i*2.2,y=-.14+u*.3,r=.17*(1-u*.65);fxS(new T.SphereGeometry(.03,6,5),eg(c,1.0),Math.cos(a)*r,y,Math.sin(a)*r+.02,sw)})}
+ else if(type=='deer'){hc='#ff8a65';
+  const br=eg('#9a6340',.55),dk=eg('#7a4c34',.5),ant=eg('#d9bf94',.55,{roughness:.6});
+  fxS(new T.SphereGeometry(.12,10,8),br,0,0,0,sw).scale.set(1,1.05,.92);
+  fxS(new T.SphereGeometry(.075,8,6),eg('#b88358',.55),0,-.075,.085,sw);
+  fxS(new T.SphereGeometry(.04,8,6),eg('#ff1744',2.0),0,-.07,.15,sw);
+  [-1,1].forEach(sd=>{fxS(new T.SphereGeometry(.014,6,5),M('#1b1b1b'),sd*.045,.015,.105,sw);
+   fxS(new T.SphereGeometry(.045,6,5),dk,sd*.13,.07,0,sw).scale.set(.5,1.2,.9);
+   const a1=fxS(new T.CylinderGeometry(.01,.016,.26,5),ant,sd*.06,.2,0,sw);a1.rotation.z=-sd*.42;
+   const a2=fxS(new T.CylinderGeometry(.008,.011,.12,5),ant,sd*.145,.28,0,sw);a2.rotation.z=sd*.6;
+   const a3=fxS(new T.CylinderGeometry(.008,.011,.1,5),ant,sd*.115,.21,0,sw);a3.rotation.z=-sd*1.0});
+  fxS(new T.TorusGeometry(.09,.012,5,12),eg('#c62828',.6),0,-.115,0,sw).rotation.x=Math.PI/2.3;
+  fxS(new T.SphereGeometry(.026,6,5),gold,0,-.16,.075,sw)}
+ else{hc='#ff7043';
+  const rd=eg('#d32f2f',.6,{roughness:.55}),wh=eg('#fffaf0',.65,{roughness:.9});
+  fxS(new T.SphereGeometry(.1,10,8),eg('#ffd2b0',.6),0,-.02,0,sw);
+  const hat=fxS(new T.ConeGeometry(.115,.21,10),rd,0,.13,0,sw);hat.rotation.z=.18;
+  fxS(new T.CylinderGeometry(.118,.118,.045,12),wh,0,.055,0,sw);fxS(new T.SphereGeometry(.036,7,6),wh,.075,.19,0,sw);
+  fxS(new T.SphereGeometry(.095,9,7),wh,0,-.1,.03,sw).scale.set(1.1,.95,.8);
+  [-1,1].forEach(sd=>{fxS(new T.SphereGeometry(.036,7,6),wh,sd*.04,-.055,.085,sw);fxS(new T.SphereGeometry(.013,5,4),M('#222'),sd*.035,.005,.092,sw);fxS(new T.SphereGeometry(.018,5,4),eg('#f4a49b',.6),sd*.065,-.025,.08,sw)});
+  fxS(new T.SphereGeometry(.024,6,5),eg('#f08a80',.7),0,-.03,.1,sw)}
+ const hm=new T.SpriteMaterial({map:HALOT,color:hc,blending:T.AdditiveBlending,transparent:true,opacity:0,depthWrite:false,fog:false}),h=new T.Sprite(hm);h.position.set(0,-.45,0);h.scale.setScalar(hs);g.add(h);
+ xmLan.push({g,sw,gls,hm,ph,spin})}
+const XLT=['snow','sock','tree','deer','santa'];
+[-1.52,-.76,0,.76,1.52].forEach((x,i)=>{mkXLantern(x,4.33,2.0,1.3,i*1.3,XLT[i]);mkXLantern(x,2.33,1.82,1.1,i*1.3+.7,XLT[(i+2)%5])});
+function xmLanFrame(night){xmLan.forEach(q=>{const k=.85+.15*Math.sin(tm*7+q.ph)*Math.sin(tm*2.3+q.ph*2);q.g.rotation.z=Math.sin(tm*1.2+q.ph)*.06;q.g.rotation.x=Math.cos(tm*1.0+q.ph)*.035;if(q.spin)q.sw.rotation.y=Math.sin(tm*.9+q.ph)*.55;else q.sw.rotation.y=Math.sin(tm*.8+q.ph)*.18;q.gls.forEach(m=>{m.emissiveIntensity=m.userData.eb*(.3+1.0*night)*k});q.hm.opacity=(.1+.5*night)*k})}
 // ซานต้า + กวางเรนเดียร์ บินผ่านท้องฟ้า
 const sleigh=new T.Group(),slG=new T.Group();sleigh.visible=false;slG.scale.setScalar(.85);sleigh.add(slG);const slS=new T.Group();slG.add(slS);fxg.xm.add(sleigh);const deer=[];
 {const red=M('#d32f2f'),gold=fxEM('#ffca28',.35),brn=M('#8d5a3b'),dkb=M('#6d4430');
