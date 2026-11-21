@@ -129,7 +129,7 @@ const CFG={url:'',token:'',weather:'weather.forecast_baan',sun:'sun.sun',pre:'so
  onW:1,pvMin:30,hpMin:10,sunK:.65,bmsSign:1, // bmsSign: ใส่ -1 ถ้ากระแส JK-BMS ของคุณเป็นบวกตอนจ่ายไฟ (ค่ามาตรฐาน: บวก=ชาร์จ)
  ent:{daily:'sensor.solar_inverter_monitor_daily_energy',total:'sensor.solar_inverter_monitor_total_energy',hpow:'sensor.house_energy_monitor_house_power',hday:'sensor.solar_inverter_house_energy_monitor_daily_energy_usage',gmon:'sensor.ac_main_breaker_mea_grid_import',bcur:'sensor.jk_bms_current',ctmp:'sensor.solar_inverter_monitor_cell_temperature_average',gpow:'sensor.ac_main_breaker_phase_a_power',otmp:'sensor.n_kbaan_1_temperature',itmp:'sensor.unhphuumiphaayainbaan_temperature',ihum:'sensor.unhphuumiphaayainbaan_humidity',evd:'sensor.ev_charger_ev_daily_energy',cyc:'sensor.jk_bms_charging_cycles',dv:'sensor.jk_bms_delta_cell_voltage',brem:'sensor.battery_remain',dchg:'sensor.jk_bms_jk_bms_daily_charge',ddis:'sensor.jk_bms_jk_bms_daily_discharge'}}; // pvMin = W ขั้นต่ำที่ถือว่ามีการผลิต PV, sunK = ความสว่างแสงอาทิตย์ // % โหลดที่ทำให้เครื่องใช้ไฟฟ้าทำงาน
 try{const sv=JSON.parse(localStorage.sd||'{}'),qp=new URLSearchParams(location.search);if(qp.get('token')){sv.token=qp.get('token');if(qp.get('url'))sv.url=qp.get('url').replace(/\/$/,'');localStorage.sd=JSON.stringify(sv);history.replaceState(null,'',location.pathname+location.hash)}CFG.url=sv.url||CFG.url;CFG.token=sv.token||CFG.token}catch(e){}
-const APP_VERSION='1.4.2';
+const APP_VERSION='1.4.3';
 /* embedded in the HACS Lovelace card (same-origin srcdoc iframe): borrow HA's own auth */
 const HP=(()=>{try{return window.parent!==window&&window.parent.__sh3d_hass||null}catch(e){return null}})();
 if(HP&&HP.auth&&HP.auth.data&&HP.auth.data.access_token){CFG.token=HP.auth.data.access_token;CFG.url=window.parent.location.origin}
@@ -1354,7 +1354,7 @@ fxRoof('hw',['#ff9800','#b388ff','#ff9800','#69f0ae'],{ridge:1});
   [-1,1].forEach(sd=>fxS(new T.ConeGeometry(.008,.025,4),M('#ffffff'),sd*.012,.05,.05,sw).rotation.x=Math.PI);
   return{hc:'#b388ff',hs:1.0,spin:1}};
  ornRows('hw',hwLan,[hwP,hwG,hwB,hwP,hwG])}
-const ghosts=[];function mkGhost(i){const g=new T.Group();fxg.hw.add(g);const m=M('#eef6ff',{emissive:'#cfe8ff',emissiveIntensity:.5,roughness:.7,transparent:true,opacity:.6,depthWrite:false}),pre=new T.MeshBasicMaterial({colorWrite:false}),dk=new T.MeshBasicMaterial({color:'#14141c'}),pk=M('#ff9ab5',{emissive:'#ff9ab5',emissiveIntensity:.5}),
+const ghosts=[];function mkGhost(i){const g=new T.Group();fxg.hw.add(g);const m=M('#eef6ff',{emissive:'#cfe8ff',emissiveIntensity:.5,roughness:.7,transparent:true,opacity:.6,depthWrite:false}),pre=m.clone(),dk=new T.MeshBasicMaterial({color:'#14141c'}),pk=M('#ff9ab5',{emissive:'#ff9ab5',emissiveIntensity:.5}),
   b=new T.Group();b.position.y=.19*2;b.scale.setScalar(2);g.add(b);const A=(geo,mt,x,y,z)=>{const o=new T.Mesh(geo,mt);o.position.set(x,y,z);b.add(o);return o};
  /* หน้าตาเหมือนผีที่โคมไฟ (hwG): หัวกลม+ลำตัวทรงกระบอก+ชายระบาย 5 ลอน+ตาโตรี+แก้มชมพู+แขนสั้น */
  A(new T.SphereGeometry(.13,12,10),m,0,.05,0);A(new T.CylinderGeometry(.13,.15,.17,12),m,0,-.045,0);
@@ -1362,6 +1362,9 @@ const ghosts=[];function mkGhost(i){const g=new T.Group();fxg.hw.add(g);const m=
  [-1,1].forEach(s=>{A(new T.SphereGeometry(.026,6,5),dk,s*.05,.08,.113).scale.set(.8,1.3,.6);const ar=A(new T.SphereGeometry(.04,6,5),m,s*.15,-.03,.02);ar.scale.set(.7,1.2,.7);ar.rotation.z=-s*.5;A(new T.SphereGeometry(.016,5,4),pk,s*.085,.03,.105)});
  A(new T.SphereGeometry(.026,6,5),dk,0,.0,.125).scale.set(1,1.4,.6);
  /* โปร่งแสง: รอบแรกเขียนเฉพาะ depth (ไม่เห็นสี) แล้วรอบสองวาดสีโปร่งใสเฉพาะผิวด้านหน้าสุด ทำให้ไม่เห็นชิ้นส่วนซ้อนกันภายในตัวผี */
+ /* ลำดับวาดคงที่ กันภาพกระพริบจากการสลับลำดับ sort */
+ pre.colorWrite=false;pre.depthWrite=true;/* ใช้ shader เดียวกับตัวผี (m.clone) เพื่อให้ค่า depth ตรงกันเป๊ะ ไม่เกิด z-fighting */
+ let ro=1;b.children.forEach(o=>{if(o.material===m)o.renderOrder=ro++});
  b.children.slice().forEach(o=>{if(o.material===m){const c=o.clone();c.material=pre;c.renderOrder=-1;b.add(c)}});
  const hm=new T.SpriteMaterial({map:HALOT,color:'#bfe3ff',blending:T.AdditiveBlending,transparent:true,opacity:.2,depthWrite:false,fog:false}),h=new T.Sprite(hm);h.position.set(0,.4,0);h.scale.setScalar(1.7);h.renderOrder=5;g.add(h);
  g.scale.setScalar(i?1:1.15);ghosts.push({g,m,hm,ph:i*2.1,R:3.6+i*1.1,w:(.22+i*.05)*(i%2?-1:1),y0:1.1+i*.55,x:0,z:5})}
