@@ -6,7 +6,7 @@
 
 An animated 3D solar-house dashboard for Home Assistant. Works with **any** inverter, battery, grid meter or EV charger: you pick the Home Assistant entities yourself. Anything you leave empty is simply not shown.
 
-*Version 1.3.8 · 10 languages: ไทย, English, 中文, Tiếng Việt, Español, Deutsch, 日本語, 한국어, Français, Bahasa Indonesia*
+*Version 1.3.9 · 10 languages: ไทย, English, 中文, Tiếng Việt, Español, Deutsch, 日本語, 한국어, Français, Bahasa Indonesia*
 
 ## Features
 - 3D house with PV, battery, load, grid (import / export) and EV energy-flow lines
@@ -15,7 +15,7 @@ An animated 3D solar-house dashboard for Home Assistant. Works with **any** inve
 - Weather scene (rain, fog, snow, thunder, day/night) driven by your `weather.*` entity
 - "Sunny", the little character, comments on what your system is doing
 - Festivals that follow the real calendar (New Year, Chinese New Year, Halloween, Christmas, Songkran): decorations, fireworks, Santa's sleigh, ghosts and water splashes, and Sunny joins in. Pick one in the ⚙ menu to preview it any day, or switch festivals off
-- Christmas: a snowman, a decorated tree, string lights along the eaves, gables and ridge, and glowing lanterns hanging from the front eave; Santa visits every 10 minutes (when the minute hand hits 00, 10, 20, 30, 40, 50), sneaks down the chimney and leaves a gift under the tree
+- Christmas: a snowman, a decorated tree, string lights along the eaves, gables and ridge, and glowing ornaments hanging from the front eaves of both floors (snowflake, stocking, Christmas tree, reindeer and Santa); Santa visits every 10 minutes (when the minute hand hits 00, 10, 20, 30, 40, 50), sneaks down the chimney and leaves a gift under the tree
 - Songkran: every 10 minutes on the clock (never later than 19:00) three cute neighbours come for either a water fight or a dance party in front of the speakers next to the mailbox (Sunny joins in), plus sand pagodas with flags
 - Chinese New Year: a Chinese dragon chasing its pearl across the sky, fireworks by day and night, fountain sparklers and a hand-held sparkler for Sunny
 - Halloween: Sunny dresses up as a vampire, bats instead of birds, a glowing pumpkin-head scarecrow with a crow, many styles of gravestones, and costumed kids coming for Trick or Treat every 10 minutes on the clock between 17:30 and 19:00
