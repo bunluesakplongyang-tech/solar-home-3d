@@ -129,7 +129,7 @@ const CFG={url:'',token:'',weather:'weather.forecast_baan',sun:'sun.sun',pre:'so
  onW:1,pvMin:30,hpMin:10,sunK:.65,bmsSign:1, // bmsSign: ใส่ -1 ถ้ากระแส JK-BMS ของคุณเป็นบวกตอนจ่ายไฟ (ค่ามาตรฐาน: บวก=ชาร์จ)
  ent:{daily:'sensor.solar_inverter_monitor_daily_energy',total:'sensor.solar_inverter_monitor_total_energy',hpow:'sensor.house_energy_monitor_house_power',hday:'sensor.solar_inverter_house_energy_monitor_daily_energy_usage',gmon:'sensor.ac_main_breaker_mea_grid_import',bcur:'sensor.jk_bms_current',ctmp:'sensor.solar_inverter_monitor_cell_temperature_average',gpow:'sensor.ac_main_breaker_phase_a_power',otmp:'sensor.n_kbaan_1_temperature',itmp:'sensor.unhphuumiphaayainbaan_temperature',ihum:'sensor.unhphuumiphaayainbaan_humidity',evd:'sensor.ev_charger_ev_daily_energy',cyc:'sensor.jk_bms_charging_cycles',dv:'sensor.jk_bms_delta_cell_voltage',brem:'sensor.battery_remain',dchg:'sensor.jk_bms_jk_bms_daily_charge',ddis:'sensor.jk_bms_jk_bms_daily_discharge'}}; // pvMin = W ขั้นต่ำที่ถือว่ามีการผลิต PV, sunK = ความสว่างแสงอาทิตย์ // % โหลดที่ทำให้เครื่องใช้ไฟฟ้าทำงาน
 try{const sv=JSON.parse(localStorage.sd||'{}'),qp=new URLSearchParams(location.search);if(qp.get('token')){sv.token=qp.get('token');if(qp.get('url'))sv.url=qp.get('url').replace(/\/$/,'');localStorage.sd=JSON.stringify(sv);history.replaceState(null,'',location.pathname+location.hash)}CFG.url=sv.url||CFG.url;CFG.token=sv.token||CFG.token}catch(e){}
-const APP_VERSION='1.4.1';
+const APP_VERSION='1.4.2';
 /* embedded in the HACS Lovelace card (same-origin srcdoc iframe): borrow HA's own auth */
 const HP=(()=>{try{return window.parent!==window&&window.parent.__sh3d_hass||null}catch(e){return null}})();
 if(HP&&HP.auth&&HP.auth.data&&HP.auth.data.access_token){CFG.token=HP.auth.data.access_token;CFG.url=window.parent.location.origin}
@@ -1354,14 +1354,17 @@ fxRoof('hw',['#ff9800','#b388ff','#ff9800','#69f0ae'],{ridge:1});
   [-1,1].forEach(sd=>fxS(new T.ConeGeometry(.008,.025,4),M('#ffffff'),sd*.012,.05,.05,sw).rotation.x=Math.PI);
   return{hc:'#b388ff',hs:1.0,spin:1}};
  ornRows('hw',hwLan,[hwP,hwG,hwB,hwP,hwG])}
-const ghosts=[];function mkGhost(i){const g=new T.Group();fxg.hw.add(g);const m=M('#eef6ff',{emissive:'#cfe8ff',emissiveIntensity:.5,roughness:.7}),dk=new T.MeshBasicMaterial({color:'#14141c'}),pk=M('#ff9ab5',{emissive:'#ff9ab5',emissiveIntensity:.5}),
+const ghosts=[];function mkGhost(i){const g=new T.Group();fxg.hw.add(g);const m=M('#eef6ff',{emissive:'#cfe8ff',emissiveIntensity:.5,roughness:.7,transparent:true,opacity:.6,depthWrite:false}),pre=new T.MeshBasicMaterial({colorWrite:false}),dk=new T.MeshBasicMaterial({color:'#14141c'}),pk=M('#ff9ab5',{emissive:'#ff9ab5',emissiveIntensity:.5}),
   b=new T.Group();b.position.y=.19*2;b.scale.setScalar(2);g.add(b);const A=(geo,mt,x,y,z)=>{const o=new T.Mesh(geo,mt);o.position.set(x,y,z);b.add(o);return o};
  /* หน้าตาเหมือนผีที่โคมไฟ (hwG): หัวกลม+ลำตัวทรงกระบอก+ชายระบาย 5 ลอน+ตาโตรี+แก้มชมพู+แขนสั้น */
  A(new T.SphereGeometry(.13,12,10),m,0,.05,0);A(new T.CylinderGeometry(.13,.15,.17,12),m,0,-.045,0);
  for(let k=0;k<5;k++){const a=k/5*Math.PI*2;A(new T.SphereGeometry(.052,6,5),m,Math.cos(a)*.1,-.14,Math.sin(a)*.1)}
  [-1,1].forEach(s=>{A(new T.SphereGeometry(.026,6,5),dk,s*.05,.08,.113).scale.set(.8,1.3,.6);const ar=A(new T.SphereGeometry(.04,6,5),m,s*.15,-.03,.02);ar.scale.set(.7,1.2,.7);ar.rotation.z=-s*.5;A(new T.SphereGeometry(.016,5,4),pk,s*.085,.03,.105)});
  A(new T.SphereGeometry(.026,6,5),dk,0,.0,.125).scale.set(1,1.4,.6);
- g.scale.setScalar(i?1:1.15);ghosts.push({g,m,ph:i*2.1,R:3.6+i*1.1,w:(.22+i*.05)*(i%2?-1:1),y0:1.1+i*.55,x:0,z:5})}
+ /* โปร่งแสง: รอบแรกเขียนเฉพาะ depth (ไม่เห็นสี) แล้วรอบสองวาดสีโปร่งใสเฉพาะผิวด้านหน้าสุด ทำให้ไม่เห็นชิ้นส่วนซ้อนกันภายในตัวผี */
+ b.children.slice().forEach(o=>{if(o.material===m){const c=o.clone();c.material=pre;c.renderOrder=-1;b.add(c)}});
+ const hm=new T.SpriteMaterial({map:HALOT,color:'#bfe3ff',blending:T.AdditiveBlending,transparent:true,opacity:.2,depthWrite:false,fog:false}),h=new T.Sprite(hm);h.position.set(0,.4,0);h.scale.setScalar(1.7);h.renderOrder=5;g.add(h);
+ g.scale.setScalar(i?1:1.15);ghosts.push({g,m,hm,ph:i*2.1,R:3.6+i*1.1,w:(.22+i*.05)*(i%2?-1:1),y0:1.1+i*.55,x:0,z:5})}
 for(let i=0;i<3;i++)mkGhost(i);
 const bats=[];function mkBat(i){const g=new T.Group();fxg.hw.add(g);const mb=M('#3b2a5e',{emissive:'#241346',emissiveIntensity:.5,roughness:.7}),mw=M('#6a45a8',{emissive:'#2f1a58',emissiveIntensity:.55,side:T.DoubleSide,roughness:.8}),ey=fxBM('#ff5252'),wh=M('#ffffff');
  fxS(new T.SphereGeometry(.09,10,8),mb,0,0,0,g).scale.set(.85,1,1.3);fxS(new T.SphereGeometry(.068,10,8),mb,0,.02,.13,g);
@@ -1845,7 +1848,7 @@ function festFrame(dt){const id=festId();if(id!==FX.id)fxSet(id);FX.t+=dt;shootF
  else if(id=='hw'){ornFrame(hwLan,night);const fb=.7+.3*night;pumpkins.forEach((p,i)=>{p.fm.color.setScalar(fb*(.85+.15*Math.sin(tm*5+i*2)));p.hm.opacity=(.12+.55*night)*(.85+.15*Math.sin(tm*5+i*2))});
   const visit=cur=='hw_candy'&&still;ghosts.forEach((q,i)=>{const a=tm*q.w+q.ph;let tx=Math.cos(a)*q.R,tz=Math.sin(a)*q.R*.85+.8,ty=q.y0+Math.sin(tm*1.4+q.ph)*.18;if(i==0&&visit){tx=0;tz=3.85;ty=.34+Math.sin(tm*2)*.06}
    const g=q.g;g.position.x+=(tx-g.position.x)*Math.min(1,dt*(visit&&i==0?1.6:3));g.position.z+=(tz-g.position.z)*Math.min(1,dt*(visit&&i==0?1.6:3));g.position.y+=(ty-g.position.y)*Math.min(1,dt*3);
-   const fx=CH.x-g.position.x,fz=CH.z-g.position.z,face=Math.hypot(fx,fz)<3.2||(visit&&i==0)?Math.atan2(fx,fz):Math.atan2(-Math.sin(a)*q.w,Math.cos(a)*q.w);g.rotation.y+=Math.atan2(Math.sin(face-g.rotation.y),Math.cos(face-g.rotation.y))*Math.min(1,dt*4);g.rotation.z=Math.sin(tm*1.7+q.ph)*.08;q.m.emissiveIntensity=.3+.6*night});
+   const fx=CH.x-g.position.x,fz=CH.z-g.position.z,face=Math.hypot(fx,fz)<3.2||(visit&&i==0)?Math.atan2(fx,fz):Math.atan2(-Math.sin(a)*q.w,Math.cos(a)*q.w);g.rotation.y+=Math.atan2(Math.sin(face-g.rotation.y),Math.cos(face-g.rotation.y))*Math.min(1,dt*4);g.rotation.z=Math.sin(tm*1.7+q.ph)*.08;q.m.emissiveIntensity=.55+.5*night;q.m.opacity=.62+.1*night;q.hm.opacity=.22+.3*night});
   if(visit&&FX.popT<=0){FX.popT=2.6;burst({x:CH.x,y:1.2,z:CH.z+.3,cols:['#ff9800','#b388ff','#ffeb3b'],n:28,sp:1.6,g:2.2,life:1.4,size:.14,shell:'p'})}if(cur!='hw_candy')FX.popT=Math.min(FX.popT,0);else FX.popT-=dt;
   hwFrame(night);const bv=true;bats.forEach((b,i)=>{b.g.visible=bv;if(!bv)return;const a=tm*b.w+b.ph,x=Math.cos(a)*b.R,z=Math.sin(a)*b.R*.85+.4,y=b.y0+Math.sin(a*2.3)*.45;b.g.position.set(x,y,z);const hd2=Math.atan2(-Math.sin(a)*b.w,Math.cos(a)*b.w);b.g.rotation.y=hd2;b.g.rotation.z=Math.sin(a*2.3)*.25;const f=Math.sin(tm*16+b.ph)*.8;b.ws[0].rotation.z=f;b.ws[1].rotation.z=-f})}
  else if(id=='sk'){ornFrame(skLan,night);discoFrame(night);peopleFrame(dt);spkFrame(night);
