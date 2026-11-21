@@ -6,7 +6,7 @@
 
 An animated 3D solar-house dashboard for Home Assistant. Works with **any** inverter, battery, grid meter or EV charger: you pick the Home Assistant entities yourself. Anything you leave empty is simply not shown.
 
-*Version 1.3.9 · 10 languages: ไทย, English, 中文, Tiếng Việt, Español, Deutsch, 日本語, 한국어, Français, Bahasa Indonesia*
+*Version 1.4.0 · 10 languages: ไทย, English, 中文, Tiếng Việt, Español, Deutsch, 日本語, 한국어, Français, Bahasa Indonesia*
 
 ## Features
 - 3D house with PV, battery, load, grid (import / export) and EV energy-flow lines
@@ -16,9 +16,10 @@ An animated 3D solar-house dashboard for Home Assistant. Works with **any** inve
 - "Sunny", the little character, comments on what your system is doing
 - Festivals that follow the real calendar (New Year, Chinese New Year, Halloween, Christmas, Songkran): decorations, fireworks, Santa's sleigh, ghosts and water splashes, and Sunny joins in. Pick one in the ⚙ menu to preview it any day, or switch festivals off
 - Christmas: a snowman, a decorated tree, string lights along the eaves, gables and ridge, and glowing ornaments hanging from the front eaves of both floors (snowflake, stocking, Christmas tree, reindeer and Santa); Santa visits every 10 minutes (when the minute hand hits 00, 10, 20, 30, 40, 50), sneaks down the chimney and leaves a gift under the tree
-- Songkran: every 10 minutes on the clock (never later than 19:00) three cute neighbours come for either a water fight or a dance party in front of the speakers next to the mailbox (Sunny joins in), plus sand pagodas with flags
-- Chinese New Year: a Chinese dragon chasing its pearl across the sky, fireworks by day and night, fountain sparklers and a hand-held sparkler for Sunny
-- Halloween: Sunny dresses up as a vampire, bats instead of birds, a glowing pumpkin-head scarecrow with a crow, many styles of gravestones, and costumed kids coming for Trick or Treat every 10 minutes on the clock between 17:30 and 19:00
+- Songkran: every 10 minutes on the clock (never later than 19:00) three cute neighbours come for either a water fight or a dance party in front of the speakers next to the mailbox (Sunny joins in), plus sand pagodas with flags, a spinning disco ball with sweeping colour lights over the sound system, ornament lanterns on both floors (marigold, jasmine garland, water drop, silver water bowl, lotus) and 7-colour bunting strung from the roof corners to bamboo poles all around the house
+- Chinese New Year: a glowing green Chinese dragon chasing its pearl across the sky (it lights up at night), firecracker strings hanging from the eaves of both floors that pop together with the firecracker pole, fireworks by day and night, fountain sparklers and a hand-held sparkler for Sunny
+- Halloween: pumpkin, ghost and bat lanterns on both floors, Sunny dresses up as a vampire, bats instead of birds, a glowing pumpkin-head scarecrow with a crow, many styles of gravestones, and costumed kids coming for Trick or Treat every 10 minutes on the clock between 17:30 and 19:00
+- New Year: "HAPPY" lanterns on the upper floor and "NEW YEAR" lanterns on the lower floor, plus balloons and fireworks
 - Neighbours drop by every 10 minutes on the clock (daytime, never after 19:00) to chat with Sunny — 5 different conversations per neighbour (aunt and uncle each have their own topics) (solar & electricity bill, cooking, garden, EV, fishing, weather, ...) plus special festival greetings (Christmas, New Year, Chinese New Year, Songkran, Halloween); the festival banner on the roof only shows briefly when the app opens
 - Random shooting stars on clear nights, every day of the year
 - EV charging ring animation under the car, and a fountain in the fish pond
