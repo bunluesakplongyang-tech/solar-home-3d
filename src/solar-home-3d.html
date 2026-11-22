@@ -129,7 +129,7 @@ const CFG={url:'',token:'',weather:'weather.forecast_baan',sun:'sun.sun',pre:'so
  onW:1,pvMin:30,hpMin:10,sunK:.65,bmsSign:1, // bmsSign: ใส่ -1 ถ้ากระแส JK-BMS ของคุณเป็นบวกตอนจ่ายไฟ (ค่ามาตรฐาน: บวก=ชาร์จ)
  ent:{daily:'sensor.solar_inverter_monitor_daily_energy',total:'sensor.solar_inverter_monitor_total_energy',hpow:'sensor.house_energy_monitor_house_power',hday:'sensor.solar_inverter_house_energy_monitor_daily_energy_usage',gmon:'sensor.ac_main_breaker_mea_grid_import',bcur:'sensor.jk_bms_current',ctmp:'sensor.solar_inverter_monitor_cell_temperature_average',gpow:'sensor.ac_main_breaker_phase_a_power',otmp:'sensor.n_kbaan_1_temperature',itmp:'sensor.unhphuumiphaayainbaan_temperature',ihum:'sensor.unhphuumiphaayainbaan_humidity',evd:'sensor.ev_charger_ev_daily_energy',cyc:'sensor.jk_bms_charging_cycles',dv:'sensor.jk_bms_delta_cell_voltage',brem:'sensor.battery_remain',dchg:'sensor.jk_bms_jk_bms_daily_charge',ddis:'sensor.jk_bms_jk_bms_daily_discharge'}}; // pvMin = W ขั้นต่ำที่ถือว่ามีการผลิต PV, sunK = ความสว่างแสงอาทิตย์ // % โหลดที่ทำให้เครื่องใช้ไฟฟ้าทำงาน
 try{const sv=JSON.parse(localStorage.sd||'{}'),qp=new URLSearchParams(location.search);if(qp.get('token')){sv.token=qp.get('token');if(qp.get('url'))sv.url=qp.get('url').replace(/\/$/,'');localStorage.sd=JSON.stringify(sv);history.replaceState(null,'',location.pathname+location.hash)}CFG.url=sv.url||CFG.url;CFG.token=sv.token||CFG.token}catch(e){}
-const APP_VERSION='1.4.4';
+const APP_VERSION='1.4.5';
 /* embedded in the HACS Lovelace card (same-origin srcdoc iframe): borrow HA's own auth */
 const HP=(()=>{try{return window.parent!==window&&window.parent.__sh3d_hass||null}catch(e){return null}})();
 if(HP&&HP.auth&&HP.auth.data&&HP.auth.data.access_token){CFG.token=HP.auth.data.access_token;CFG.url=window.parent.location.origin}
@@ -1453,7 +1453,7 @@ function hwFrame(night){scG.rotation.z=Math.sin(tm*1.3)*.035;scG.userData.hd.rot
  const c5=['#d32f2f','#1976d2','#2e7d32','#f57c00','#7b1fa2'];
  'HAPPY'.split('').forEach((c,i)=>mkOrn('ny',nyLan,[-1.52,-.76,0,.76,1.52][i],4.33,2.0,1.3,i*1.3,nyL(c,c5[i])));
  'NEWYEAR'.split('').forEach((c,i)=>mkOrn('ny',nyLan,(i-3)*.6,2.33,1.82,1.0,i*1.3+.7,nyL(c,i<3?'#f9a825':'#d32f2f',i<3?'#4e342e':'#fff3b0')))}
-const balloons=[];[[-2.7,4.2,0],[-2.45,4.5,1],[-2.9,4.6,2],[-2.55,3.9,3],[4.7,3.9,4],[4.45,4.25,5],[4.95,4.35,0],[-4.2,2.0,1]].forEach(([x,z,ci],i)=>{const g=new T.Group();g.position.set(x,0,z);fxg.ny.add(g);const cc=['#ff5252','#ffd54f','#4fc3f7','#69f0ae','#ff80ab','#b388ff'][(ci+i)%6],h=1.35+(i%3)*.28;
+const balloons=[];[[4.7,3.9,4],[4.45,4.25,5],[4.95,4.35,0]].forEach(([x,z,ci],i)=>{const g=new T.Group();g.position.set(x,0,z);fxg.ny.add(g);const cc=['#ff5252','#ffd54f','#4fc3f7','#69f0ae','#ff80ab','#b388ff'][(ci+i)%6],h=1.35+(i%3)*.28;
  const b=fxS(new T.SphereGeometry(.2,12,10),M(cc,{roughness:.25,metalness:.1}),0,h,0,g);b.scale.set(1,1.2,1);fxS(new T.ConeGeometry(.035,.06,6),M(cc),0,h-.26,0,g);fxS(new T.CylinderGeometry(.004,.004,h-.3,3),M('#eeeeee'),0,(h-.3)/2,0,g);balloons.push({g,ph:i*.9})});
 // ----- 🎆 ของตกแต่งปีใหม่เพิ่ม (v1.4.4): บอลลูนฟอยล์ตัวเลขปี + น้ำพุไฟเย็น 2 จุด + หอแชมเปญ + ริบบิ้นเกลียวชายคา -----
 const nyDeco=(()=>{const G=fxg.ny,D={yr:null,nb:[],st:[],pts:null};
@@ -1496,6 +1496,36 @@ const nyDeco=(()=>{const G=fxg.ny,D={yr:null,nb:[],st:[],pts:null};
   for(let i=0;i<PN;i++){if(pl[i]<=0)continue;pl[i]-=dt;if(pl[i]<=0){pp[i*3+1]=-9;continue}pv[i*3+1]-=3.8*dt;pp[i*3]+=pv[i*3]*dt;pp[i*3+1]+=pv[i*3+1]*dt;pp[i*3+2]+=pv[i*3+2]*dt;if(pp[i*3+1]<.05){pl[i]=0;pp[i*3+1]=-9}}
   pg.attributes.position.needsUpdate=true};
  D.pl=pl;D.pp=pp;return D})();
+// ----- 🎁 ปีใหม่ v1.4.5: กล่องของขวัญประดับ 2 กอง + สายไฟกระพริบตามชายคา + ดาวทองหน้าจั่ว -----
+const nyDeco2=(()=>{const G=fxg.ny,D={sp:[],bm:[],st:[]};
+ NGB.push([-2.2,-1.0,4.0,5.0],[1.6,2.3,4.4,5.1]);
+ const gift=(g,x,y,z,w,h,d,col,rb,ry)=>{const o=new T.Group();o.position.set(x,y,z);o.rotation.y=ry||0;g.add(o);const bm=M(col,{roughness:.45}),rm=M(rb,{roughness:.3,metalness:.3});
+  fxS(new T.BoxGeometry(w,h,d),bm,0,h/2,0,o);fxS(new T.BoxGeometry(w+.012,h+.012,d*.17),rm,0,h/2,0,o);fxS(new T.BoxGeometry(w*.17,h+.012,d+.012),rm,0,h/2,0,o);
+  [-1,1].forEach(s=>{const l=fxS(new T.SphereGeometry(Math.min(w,d)*.2,8,6),rm,s*Math.min(w,d)*.17,h+Math.min(w,d)*.07,0,o);l.scale.set(1.1,.55,.7);l.rotation.z=s*.5});fxS(new T.SphereGeometry(Math.min(w,d)*.07,6,5),rm,0,h+Math.min(w,d)*.05,0,o);return o};
+ const halo=(g,x,y,z,sc,col)=>{const s=new T.Sprite(new T.SpriteMaterial({map:HALOT,color:col,blending:T.AdditiveBlending,transparent:true,opacity:0,depthWrite:false,fog:false}));s.position.set(x,y,z);s.scale.setScalar(sc);s.renderOrder=5;g.add(s);return s};
+ // กองซ้าย (ตรงที่เคยมีลูกโป่ง)
+ {const g=new T.Group();g.position.set(-1.62,0,4.5);g.scale.setScalar(.85);G.add(g);
+  gift(g,0,0,0,.52,.4,.52,'#d32f2f','#ffd54f',.2);gift(g,.5,0,.18,.4,.3,.4,'#2e7d32','#fafafa',.55);gift(g,-.42,0,.22,.32,.26,.32,'#1976d2','#ffd54f',-.3);gift(g,.02,.4,0,.3,.22,.3,'#ffd54f','#d32f2f',.9);gift(g,.12,0,-.48,.26,.5,.26,'#7b1fa2','#fafafa',.1);gift(g,-.5,0,-.3,.24,.2,.24,'#ff4081','#fafafa',.7);
+  D.sp.push(halo(g,0,.55,0,1.5,'#ffe9a8'))}
+ // กองขวา
+ {const g=new T.Group();g.position.set(1.95,0,4.75);G.add(g);
+  gift(g,0,0,0,.42,.34,.42,'#00897b','#ffd54f',.3);gift(g,.38,0,.12,.3,.24,.3,'#f57c00','#fafafa',-.4);gift(g,-.02,.34,0,.24,.18,.24,'#c2185b','#ffd54f',.7);
+  D.sp.push(halo(g,0,.45,0,1.1,'#ffe9a8'))}
+ // สายไฟกระพริบตามขอบชายคา 2 ชั้น
+ const BC=['#ffd54f','#ff5252','#69f0ae','#4fc3f7','#fafafa'],bms=BC.map(c=>fxEM(c,.6)),wm=M('#1b3d2a'),bg=new T.SphereGeometry(.028,6,5);
+ [[4.43,2.1],[2.43,1.92]].forEach(([y,z],li)=>{const xs=[-2.2,-1.1,0,1.1,2.2];let k=0;
+  for(let s=0;s<4;s++){const a=xs[s],b=xs[s+1],pts=[];for(let t=0;t<=1.001;t+=.125)pts.push(new T.Vector3(a+(b-a)*t,y-.09*Math.sin(t*Math.PI),z));
+   fxS(new T.TubeGeometry(new T.CatmullRomCurve3(pts),12,.006,3),wm,0,0,0,G);
+   for(let t=.125;t<1;t+=.125){const p=pts[Math.round(t/.125)];fxS(bg,bms[k%5],p.x,p.y-.03,p.z,G);k++}}});
+ // ดาวทองสองดวงหน้าจั่ว
+ const sh=new T.Shape();for(let i=0;i<10;i++){const r=i%2?.085:.2,a=-Math.PI/2+i*Math.PI/5;i?sh.lineTo(Math.cos(a)*r,-Math.sin(a)*r):sh.moveTo(Math.cos(a)*r,-Math.sin(a)*r)}
+ const sg=new T.ExtrudeGeometry(sh,{depth:.05,bevelEnabled:false}),sm=M('#ffd54f',{emissive:'#ffb300',emissiveIntensity:.5,metalness:.3,roughness:.35});
+ [-2.1,2.1].forEach(x=>{const g=new T.Group();g.position.set(x,RY+.02,0);G.add(g);fxS(new T.CylinderGeometry(.012,.012,.3,4),M('#b8860b'),0,.15,0,g);const st=new T.Mesh(sg,sm);st.position.set(0,.4,-.025);g.add(st);D.st.push({g,h:halo(g,0,.4,0,1.0,'#ffd27a')})});
+ D.frame=(dt,night)=>{D.sp.forEach((s,i)=>s.material.opacity=(.1+.3*night)*(.7+.3*Math.sin(tm*2.3+i*1.7)));
+  bms.forEach((m,i)=>m.emissiveIntensity=.35+.45*night+.3*Math.sin(tm*3.2+i*1.3));
+  D.st.forEach((s,i)=>{s.g.rotation.y=Math.sin(tm*.6+i*2)*.5;s.h.material.opacity=(.18+.4*night)*(.7+.3*Math.sin(tm*2.7+i))})};
+ return D})();
+
 const garl=[];for(let i=0;i<0;i++){const x=-2.0+i*.5,g=new T.Group();g.position.set(x,4.3,1.96);fxg.sk.add(g);const cs=['#ff9800','#ffffff','#ffb300','#fff3e0','#ff8a65'];for(let k=0;k<5;k++)fxS(new T.SphereGeometry(.035-.002*k,6,5),M(cs[(i+k)%5]),0,-.07*k,0,g);fxS(new T.SphereGeometry(.06,7,6),M(i%2?'#ff9800':'#ec407a'),0,-.4,0,g);garl.push({g,ph:i*.7})}
 {const g=new T.Group();g.position.set(6.55,0,1.05);fxg.sk.add(g);const sv=M('#cfd8dc',{metalness:.8,roughness:.25});fxS(new T.CylinderGeometry(.16,.1,.13,14),sv,0,.09,0,g);fxS(new T.TorusGeometry(.16,.015,6,16),sv,0,.155,0,g).rotation.x=Math.PI/2;const wt=fxS(new T.CylinderGeometry(.145,.145,.01,14),M('#58b9e6'),0,.14,0,g);[-1,1].forEach(s=>fxS(new T.SphereGeometry(.045,6,5),M(s>0?'#ff9800':'#ec407a'),s*.1,.18,0,g))}
 // ----- ฉากประกอบการแสดง: น้ำสาดสงกรานต์ + โน้ตเพลง + ของถือในมือซันนี่ -----
@@ -1879,7 +1909,7 @@ function festFrame(dt){const id=festId();if(id!==FX.id)fxSet(id);FX.t+=dt;shootF
   for(let i=0;i<60;i++){slA[i]=Math.max(0,slA[i]-dt/1.3);slP[i*3+1]-=dt*.35*(slA[i]>0);const a=slA[i];slC[i*3]=a;slC[i*3+1]=a*.82;slC[i*3+2]=a*.4;if(a<=0)slP[i*3+1]=-9}slT.attributes.position.needsUpdate=true;slT.attributes.color.needsUpdate=true}
  else if(id=='ny'||id=='cny'){
   const h=hour(),cdOn=fxCountOn();
-  if(id=='ny'){ornFrame(nyLan,night);nyDeco.frame(dt,night);balloons.forEach(b=>{b.g.rotation.z=Math.sin(tm*.9+b.ph)*.05;b.g.rotation.x=Math.cos(tm*.8+b.ph)*.05});
+  if(id=='ny'){ornFrame(nyLan,night);nyDeco.frame(dt,night);nyDeco2.frame(dt,night);balloons.forEach(b=>{b.g.rotation.z=Math.sin(tm*.9+b.ph)*.05;b.g.rotation.x=Math.cos(tm*.8+b.ph)*.05});
    if(cdOn){const sc=h>=12?Math.ceil((24-h)*3600):0;if(sc!==FX.cd){FX.cd=sc;if(sc>0){showMsg(`🎆 ${sc}!`)}else{showMsg(_t("🎉🎆 สุขสันต์ปีใหม่ {0}!",FX.yr));FX.crazy=40}CH.msgT=0;if(sc<=0)CH.hopT=.0001}}}
   if(FX.crazy>0)FX.crazy-=dt;
   FX.fwT-=dt;const fwDay=id=='cny'&&night<=.25&&!FX.forced;if((night>.25||FX.forced||FX.crazy>0||fwDay)&&FX.fwT<=0){FX.fwT=FX.crazy>0?.35+Math.random()*.4:(id=='ny'?1.7:fwDay?4:1.7)+Math.random()*2.2;
