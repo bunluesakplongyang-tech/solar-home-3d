@@ -129,7 +129,7 @@ const CFG={url:'',token:'',weather:'weather.forecast_baan',sun:'sun.sun',pre:'so
  onW:1,pvMin:30,hpMin:10,sunK:.65,bmsSign:1, // bmsSign: ใส่ -1 ถ้ากระแส JK-BMS ของคุณเป็นบวกตอนจ่ายไฟ (ค่ามาตรฐาน: บวก=ชาร์จ)
  ent:{daily:'sensor.solar_inverter_monitor_daily_energy',total:'sensor.solar_inverter_monitor_total_energy',hpow:'sensor.house_energy_monitor_house_power',hday:'sensor.solar_inverter_house_energy_monitor_daily_energy_usage',gmon:'sensor.ac_main_breaker_mea_grid_import',bcur:'sensor.jk_bms_current',ctmp:'sensor.solar_inverter_monitor_cell_temperature_average',gpow:'sensor.ac_main_breaker_phase_a_power',otmp:'sensor.n_kbaan_1_temperature',itmp:'sensor.unhphuumiphaayainbaan_temperature',ihum:'sensor.unhphuumiphaayainbaan_humidity',evd:'sensor.ev_charger_ev_daily_energy',cyc:'sensor.jk_bms_charging_cycles',dv:'sensor.jk_bms_delta_cell_voltage',brem:'sensor.battery_remain',dchg:'sensor.jk_bms_jk_bms_daily_charge',ddis:'sensor.jk_bms_jk_bms_daily_discharge'}}; // pvMin = W ขั้นต่ำที่ถือว่ามีการผลิต PV, sunK = ความสว่างแสงอาทิตย์ // % โหลดที่ทำให้เครื่องใช้ไฟฟ้าทำงาน
 try{const sv=JSON.parse(localStorage.sd||'{}'),qp=new URLSearchParams(location.search);if(qp.get('token')){sv.token=qp.get('token');if(qp.get('url'))sv.url=qp.get('url').replace(/\/$/,'');localStorage.sd=JSON.stringify(sv);history.replaceState(null,'',location.pathname+location.hash)}CFG.url=sv.url||CFG.url;CFG.token=sv.token||CFG.token}catch(e){}
-const APP_VERSION='1.4.5';
+const APP_VERSION='1.4.6';
 /* embedded in the HACS Lovelace card (same-origin srcdoc iframe): borrow HA's own auth */
 const HP=(()=>{try{return window.parent!==window&&window.parent.__sh3d_hass||null}catch(e){return null}})();
 if(HP&&HP.auth&&HP.auth.data&&HP.auth.data.access_token){CFG.token=HP.auth.data.access_token;CFG.url=window.parent.location.origin}
@@ -784,6 +784,16 @@ rbx(.13,.36,.22,M('#eceff1',{roughness:.45}),W/2+.15,1.0,1.15,root,.04);bx(.02,.
 const evLed=bx(.02,.05,.1,M('#69f0ae',{emissive:'#69f0ae',emissiveIntensity:.15}),W/2+.225,1.12,1.15);
 cy(.055,.055,.03,14,dkM,-.575,.62,.55,car).rotation.z=Math.PI/2;const evPort=ic(.022,M('#69f0ae',{emissive:'#69f0ae',emissiveIntensity:.15}),-.592,.62,.55,car,1);
 let foamK=0,CARL=0;
+// ----- ✨ v1.4.6: อุปกรณ์เรืองแสงตอนกลางคืน (ฮาโลที่ไฟ LED + แอ่งแสงใต้หุ่น Inverter/รถ EV) -----
+const DG=[],dgHalo=(par,x,y,z,sc,m,gain)=>{const sp=new T.Sprite(new T.SpriteMaterial({map:HALOT,color:'#ffffff',blending:T.AdditiveBlending,transparent:true,opacity:0,depthWrite:false,fog:false}));sp.position.set(x,y,z);sp.scale.setScalar(sc);sp.renderOrder=6;par.add(sp);DG.push({sp,m,gain})};
+dgHalo(inv,0,1.9,0,1.5,antM,1.1);[[-.14,ledP],[0,ledG],[.14,ledL]].forEach(([x,m])=>dgHalo(inv,x,1.055,.31,.55,m,1.1));
+dgHalo(root,2.25,1.72,-1.0,.8,meterL.material,1);dgHalo(root,W/2+.26,1.12,1.15,.8,evLed.material,1);dgHalo(car,-.62,.62,.55,.7,evPort.material,1);
+const dgPool=(par,x,z,sc,y)=>{const p=new T.Mesh(new T.PlaneGeometry(1,1),new T.MeshBasicMaterial({map:POOLT,color:'#7cf29a',blending:T.AdditiveBlending,transparent:true,opacity:0,depthWrite:false,fog:false}));p.rotation.x=-Math.PI/2;p.position.set(x,y,z);p.scale.setScalar(sc);p.renderOrder=2;par.add(p);return p};
+const dgInvP=dgPool(inv,0,.1,3.4,.035),dgCarP=dgPool(car,0,0,3.6,.04);
+function devGlowFrame(){const nt=clamp((ENV.n-.12)/.5,0,1);
+ DG.forEach(d=>{const v=nt>.01?nt*d.gain*Math.min(1,d.m.emissiveIntensity*.9):0;d.sp.visible=v>.004;if(d.sp.visible){d.sp.material.color.copy(d.m.emissive);d.sp.material.opacity=v}});
+ dgInvP.material.color.copy(antM.emissive);dgInvP.material.opacity=nt*.22*Math.min(1,antM.emissiveIntensity);dgInvP.visible=dgInvP.material.opacity>.004;
+ dgCarP.material.opacity=nt*(FL.ev.on?.28+.1*Math.sin(tm*6):.09);dgCarP.material.color.set(FL.ev.on?'#69f0ae':'#9fd8ff');dgCarP.visible=dgCarP.material.opacity>.004}
 // วงแหวนเรืองแสงใต้รถ EV ขณะชาร์จ (ธีมเดียวกับวงแหวน Inverter)
 const EVG=new T.Group();EVG.position.set(0,.04,-.02);EVG.visible=false;car.add(EVG);
 const evMat=(o)=>bm('#69f0ae',Object.assign({transparent:true,opacity:0,blending:T.AdditiveBlending,depthWrite:false,side:T.DoubleSide,fog:false},o||{}));
@@ -1247,7 +1257,7 @@ function ornFrame(list,night){list.forEach(q=>{const k=.85+.15*Math.sin(tm*7+q.p
 function ornRows(fid,list,fns){[-1.52,-.76,0,.76,1.52].forEach((x,i)=>{mkOrn(fid,list,x,4.33,2.0,1.3,i*1.3,fns[i]);mkOrn(fid,list,x,2.33,1.82,1.1,i*1.3+.7,fns[(i+2)%fns.length])})}
 const hwLan=[],nyLan=[],skLan=[];
 // ซานต้า + กวางเรนเดียร์ บินผ่านท้องฟ้า
-const sleigh=new T.Group(),slG=new T.Group();sleigh.visible=false;slG.scale.setScalar(.85);sleigh.add(slG);const slS=new T.Group();slG.add(slS);fxg.xm.add(sleigh);const deer=[];
+const sleigh=new T.Group(),slG=new T.Group();sleigh.userData.noGlow=true;sleigh.visible=false;slG.scale.setScalar(.85);sleigh.add(slG);const slS=new T.Group();slG.add(slS);fxg.xm.add(sleigh);const deer=[];
 {const red=M('#d32f2f'),gold=fxEM('#ffca28',.35),brn=M('#8d5a3b'),dkb=M('#6d4430');
  rbx(.5,.18,.95,red,0,.24,0,slG,.05);rbx(.5,.34,.1,red,0,.42,-.48,slG,.05);rbx(.5,.14,.1,red,0,.35,.46,slG,.04);[-1,1].forEach(s=>{fxS(new T.CylinderGeometry(.018,.018,1.2,6),gold,s*.2,.08,0,slG).rotation.x=Math.PI/2;fxS(new T.BoxGeometry(.02,.14,.02),gold,s*.2,.15,.3,slG);fxS(new T.BoxGeometry(.02,.14,.02),gold,s*.2,.15,-.3,slG)});
  fxS(new T.SphereGeometry(.16,8,6),M('#a1887f'),0,.4,-.45,slS);
@@ -1377,7 +1387,7 @@ const bats=[];function mkBat(i){const g=new T.Group();fxg.hw.add(g);const mb=M('
  g.scale.setScalar(1.7);bats.push({g,ws,ph:i*1.9,R:3.9+(i%3)*.9,w:(.45+i*.06)*(i%2?-1:1),y0:4.5+(i%4)*.7,x:0,z:0,yaw:0})}
 for(let i=0;i<6;i++)mkBat(i);
 // ----- 🌾 หุ่นไล่กา + กาเกาะบ่า -----
-const SC={x:4.35,z:4.25},scG=new T.Group(),scArms=[],scCrow=new T.Group();scG.position.set(SC.x,0,SC.z);scG.rotation.y=.3;fxg.hw.add(scG);
+const SC={x:4.35,z:4.25},scG=new T.Group(),scArms=[],scCrow=new T.Group();scG.userData.noGlow=true;scG.position.set(SC.x,0,SC.z);scG.rotation.y=.3;fxg.hw.add(scG);
 const scPlaid=(()=>{const c=mkC(64,64),x=c.getContext('2d');x.fillStyle='#b23a2e';x.fillRect(0,0,64,64);x.fillStyle='rgba(30,10,8,.55)';for(let i=0;i<64;i+=16){x.fillRect(i,0,6,64);x.fillRect(0,i,64,6)}x.fillStyle='rgba(255,200,120,.35)';for(let i=8;i<64;i+=16){x.fillRect(i,0,2,64);x.fillRect(0,i,64,2)}const t=new T.CanvasTexture(c);t.wrapS=t.wrapT=T.RepeatWrapping;t.repeat.set(2,1);return t})();
 const scFace=(()=>{const c=mkC(128,128),x=c.getContext('2d');x.clearRect(0,0,128,128);
  [[40,52],[88,52]].forEach(([a,b])=>{x.fillStyle='#1d1a22';x.beginPath();x.arc(a,b,12,0,7);x.fill();x.strokeStyle='#d9a066';x.lineWidth=2.5;x.beginPath();x.moveTo(a-6,b-6);x.lineTo(a+6,b+6);x.moveTo(a+6,b-6);x.lineTo(a-6,b+6);x.stroke();x.fillStyle='#fff';x.beginPath();x.arc(a-3,b-4,3,0,7);x.fill()});
@@ -1454,7 +1464,7 @@ function hwFrame(night){scG.rotation.z=Math.sin(tm*1.3)*.035;scG.userData.hd.rot
  'HAPPY'.split('').forEach((c,i)=>mkOrn('ny',nyLan,[-1.52,-.76,0,.76,1.52][i],4.33,2.0,1.3,i*1.3,nyL(c,c5[i])));
  'NEWYEAR'.split('').forEach((c,i)=>mkOrn('ny',nyLan,(i-3)*.6,2.33,1.82,1.0,i*1.3+.7,nyL(c,i<3?'#f9a825':'#d32f2f',i<3?'#4e342e':'#fff3b0')))}
 const balloons=[];[[4.7,3.9,4],[4.45,4.25,5],[4.95,4.35,0]].forEach(([x,z,ci],i)=>{const g=new T.Group();g.position.set(x,0,z);fxg.ny.add(g);const cc=['#ff5252','#ffd54f','#4fc3f7','#69f0ae','#ff80ab','#b388ff'][(ci+i)%6],h=1.35+(i%3)*.28;
- const b=fxS(new T.SphereGeometry(.2,12,10),M(cc,{roughness:.25,metalness:.1}),0,h,0,g);b.scale.set(1,1.2,1);fxS(new T.ConeGeometry(.035,.06,6),M(cc),0,h-.26,0,g);fxS(new T.CylinderGeometry(.004,.004,h-.3,3),M('#eeeeee'),0,(h-.3)/2,0,g);balloons.push({g,ph:i*.9})});
+ const b=fxS(new T.SphereGeometry(.2,12,10),M(cc,{roughness:.25,metalness:.1}),0,h,0,g);b.scale.set(1,1.2,1);fxS(new T.ConeGeometry(.035,.06,6),M(cc),0,h-.26,0,g);fxS(new T.CylinderGeometry(.004,.004,h-.3,3),M('#eeeeee'),0,(h-.3)/2,0,g);const bh=new T.Sprite(new T.SpriteMaterial({map:HALOT,color:cc,blending:T.AdditiveBlending,transparent:true,opacity:0,depthWrite:false,fog:false}));bh.position.set(0,h,0);bh.scale.setScalar(1.05);bh.renderOrder=5;g.add(bh);balloons.push({g,ph:i*.9,bh})});
 // ----- 🎆 ของตกแต่งปีใหม่เพิ่ม (v1.4.4): บอลลูนฟอยล์ตัวเลขปี + น้ำพุไฟเย็น 2 จุด + หอแชมเปญ + ริบบิ้นเกลียวชายคา -----
 const nyDeco=(()=>{const G=fxg.ny,D={yr:null,nb:[],st:[],pts:null};
  NGB.push([-2.45,-1.45,4.85,5.85],[.95,1.45,4.55,5.45],[-1.45,-.95,4.55,5.45],[1.2,3.95,5.2,6.2]);
@@ -1537,7 +1547,7 @@ const orn=new T.Group();orn.position.set(0,-.44,.05);orn.visible=false;aR.add(or
 const gun=new T.Group();gun.position.set(0,-.4,.02);gun.visible=false;aR.add(gun);fxS(new T.BoxGeometry(.07,.3,.12),M('#1e88e5'),0,-.12,0,gun);fxS(new T.CylinderGeometry(.05,.05,.16,8),M('#b3e5fc',{transparent:true,opacity:.8}),0,-.06,.1,gun);fxS(new T.CylinderGeometry(.016,.016,.14,6),M('#0d47a1'),0,-.34,0,gun);
 const envl=new T.Group();envl.position.set(0,.74,.34);envl.rotation.x=-.25;envl.visible=false;ch.add(envl);fxS(new T.BoxGeometry(.2,.28,.012),M('#d32f2f'),0,0,0,envl);fxS(new T.CylinderGeometry(.045,.045,.016,12),fxEM('#ffca28',.5),0,.02,.006,envl).rotation.x=Math.PI/2;
 // ----- ⛄ มนุษย์หิมะ -----
-const SM={x:-3.05,z:2.85},smG=new T.Group(),smArm=[];smG.position.set(SM.x,0,SM.z);smG.rotation.y=.4;smG.scale.setScalar(.82);fxg.xm.add(smG);
+const SM={x:-3.05,z:2.85},smG=new T.Group(),smArm=[];smG.userData.noGlow=true;smG.position.set(SM.x,0,SM.z);smG.rotation.y=.4;smG.scale.setScalar(.82);fxg.xm.add(smG);
 {const wh=M('#f6f9ff',{roughness:.95}),cl=M('#1c2428'),or=M('#ff7043'),rd=M('#d32f2f'),br=M('#6d4c41'),hd=new T.Group();
  fxS(new T.CylinderGeometry(.66,.7,.02,24),M('#ffffff',{roughness:1}),0,.01,0,smG);
  fxS(new T.SphereGeometry(.36,16,12),wh,0,.36,0,smG);fxS(new T.SphereGeometry(.27,16,12),wh,0,.9,0,smG);
@@ -1552,7 +1562,7 @@ const SM={x:-3.05,z:2.85},smG=new T.Group(),smArm=[];smG.position.set(SM.x,0,SM.
  [-1,1].forEach(s=>{const g=new T.Group();g.position.set(s*.25,.98,0);smG.add(g);fxS(new T.CylinderGeometry(.014,.018,.62,5),br,s*.31,0,0,g).rotation.z=Math.PI/2;
   [-.5,.5].forEach(d=>fxS(new T.CylinderGeometry(.008,.01,.15,4),br,s*.56,d*.08,0,g).rotation.z=-s*d*.9);g.rotation.z=s*.35;smArm.push({g,s})})}
 // ----- 🎅 ซานต้าแอบปีนปล่องควัน -----
-const snt=new T.Group(),sntI=new T.Group(),SNL={};snt.visible=false;snt.scale.setScalar(.9);snt.add(sntI);fxg.xm.add(snt);
+const snt=new T.Group(),sntI=new T.Group(),SNL={};snt.userData.noGlow=true;snt.visible=false;snt.scale.setScalar(.9);snt.add(sntI);fxg.xm.add(snt);
 {const rd=M('#d32f2f'),wh=M('#fafafa'),bk=M('#1b1b1b'),sk=M('#ffd0b0'),gd=fxEM('#ffca28',.4),bn=M('#8d5a3b');
  fxS(new T.CylinderGeometry(.1,.13,.3,10),rd,0,.31,0,sntI);fxS(new T.CylinderGeometry(.134,.136,.045,10),wh,0,.175,0,sntI);fxS(new T.CylinderGeometry(.118,.122,.04,10),bk,0,.27,0,sntI);fxS(new T.BoxGeometry(.05,.045,.012),gd,0,.27,.122,sntI);fxS(new T.BoxGeometry(.03,.26,.012),wh,0,.31,.113,sntI);
  const hd=new T.Group();hd.position.set(0,.53,0);sntI.add(hd);SNL.hd=hd;fxS(new T.SphereGeometry(.082,12,10),sk,0,0,0,hd);fxS(new T.SphereGeometry(.078,10,8),wh,0,-.055,.04,hd).scale.set(1.05,1.15,.8);fxS(new T.SphereGeometry(.014,6,5),M('#ff8a80'),0,-.005,.082,hd);[-1,1].forEach(s=>fxS(new T.SphereGeometry(.011,5,4),bk,s*.032,.02,.072,hd));
@@ -1604,7 +1614,7 @@ function santaVisit(dt){const s=FX.sl;s.t+=dt;const t=s.t;
 const people=[],PJN=130,pjG=new T.BufferGeometry(),pjP=new Float32Array(PJN*3),pjV=new Float32Array(PJN*3),pjL=new Float32Array(PJN);pjG.setAttribute('position',new T.BufferAttribute(pjP,3));
 const pjPts=new T.Points(pjG,new T.PointsMaterial({size:.12,map:HALOT,color:'#c9ecff',transparent:true,opacity:.95,depthWrite:false,fog:false}));pjPts.frustumCulled=false;fxg.sk.add(pjPts);for(let i=0;i<PJN;i++)pjP[i*3+1]=-9;let pjI=0;
 const PT={st:0,t:0,dur:40,lt:1,type:0};
-function mkPerson(o){const g=new T.Group();g.scale.setScalar(o.k);g.visible=false;g.position.set(o.spawn[0],0,o.spawn[1]);(o.par||fxg.sk).add(g);const inn=new T.Group();g.add(inn);
+function mkPerson(o){const g=new T.Group();g.userData.noGlow=true;g.scale.setScalar(o.k);g.visible=false;g.position.set(o.spawn[0],0,o.spawn[1]);(o.par||fxg.sk).add(g);const inn=new T.Group();g.add(inn);
  const sk=M(o.skin),sh=M(o.map?'#ffffff':o.shirt,o.map?{map:o.map}:{}),pn=M(o.pants),hr=M(o.hair),dkm=M('#263238'),wh=M('#ffffff'),P={g,inn,o,th:o.home,mode:0,tgt:null,tt:0,fT:1+Math.random()*2,burst:0,bT:0,hit:0,x:o.spawn[0],z:o.spawn[1],face:0,lw:0,wave:0};
  const bd=fxS(new T.CylinderGeometry(.2,.22,.5,14),sh,0,.7,0,inn),bt=fxS(new T.CylinderGeometry(.22,.22,.18,14),pn,0,.45,0,inn);if(o.belly){bd.scale.set(1.2,1,1.2);bt.scale.set(1.2,1,1.2)}
  const hd=new T.Group();hd.position.y=1.2;hd.scale.setScalar(o.hs||1);inn.add(hd);P.hd=hd;fxS(new T.SphereGeometry(.34,18,14),sk,0,0,0,hd);
@@ -1877,6 +1887,14 @@ function gFrame(dt){const t=tm,L=GZ.list;
    P.aL.rotation.x=-w*.6*run;P.aL.rotation.z=.1;
    if(wave){P.aR.rotation.x=0;P.aR.rotation.z=2.3+Math.sin(t*9)*.3}else{P.aR.rotation.z=-.1;P.aR.rotation.x=kid&&P.mode==2?-1.15+Math.sin(t*5+o.ph)*.1:(o.bag==2?-.4:-.5+w*.4*run)}})}
  {const b=$('bub3');if(GB.t>0&&GB.P){GB.t-=dt;if(GB.t<=0)b.style.opacity=0;else{v3.set(GB.P.x,1.8*GB.P.o.k+.05,GB.P.z).project(cam);b.style.left=Math.round(clamp((v3.x*.5+.5)*innerWidth,70,innerWidth-70))+'px';b.style.top=Math.round(clamp((-v3.y*.5+.5)*innerHeight,50,innerHeight))+'px';b.style.display=v3.z<1?'':'none'}}}}
+// ----- ✨ v1.4.6: ของตกแต่งเทศกาลเรืองแสงตอนกลางคืน (วัสดุสีสดที่ยังไม่เรืองจะได้แสงในตัวเอง) -----
+const FXGL={};
+function fxGlowInit(){FIDS.forEach(id=>{const list=[],seen=new Set(),hsl={},walk=o=>{if(o.userData&&o.userData.noGlow)return;
+ if(o.isMesh&&o.material&&!Array.isArray(o.material)&&o.material.isMeshStandardMaterial){const m=o.material;
+  if(!seen.has(m)&&!m.transparent&&!m.map&&m.emissive.getHex()===0){seen.add(m);m.color.getHSL(hsl);
+   if(hsl.s>.45&&hsl.l>.4&&hsl.l<.82){m.emissive.copy(m.color);list.push({m,k:.42})}}}
+ o.children.forEach(walk)};walk(fxg[id]);FXGL[id]=list})}
+fxGlowInit();
 // ----- ตั้ง/เปลี่ยนเทศกาล -----
 function fxUI(){const id=FX.id,c=$('fchip');if(c){c.className=id?'on':'';c.textContent=id?fName(id):''}const nx=festNext(),s=$('fst');if(s)s.textContent=id?_t("ตอนนี้: {0}",fName(id)):nx?_t("เทศกาลถัดไป: {0} (อีก {1} วัน)",fName(nx[0]),nx[1]):''}
 function fxSet(id){FX.id=id;FX.signT=id?10:0;FX.forced=FMODE!='auto'&&FMODE!='off';FX.yr=festInfo().yr||nowD().getFullYear();FIDS.forEach(k=>{fxg[k].visible=k==id;sunHats[k].visible=catHats[k].visible=k==id});birds.forEach(b=>b.g.visible=id!='hw');
@@ -1893,6 +1911,7 @@ function festFrame(dt){const id=festId();if(id!==FX.id)fxSet(id);FX.t+=dt;shootF
  if(!id){FX.wet=0;cgrp.rotation.z=0;if(jPts.visible)jPts.visible=false;burstFrame(dt);return}
  const n=ENV.n,night=clamp((n-.12)/.5,0,1),hp=aR.localToWorld(new T.Vector3(0,-.5,.05));FXR.worldToLocal(hp);
  burstFrame(dt);fxPFrame(dt);
+ {const gl=FXGL[id];if(gl)for(let i=0;i<gl.length;i++)gl[i].m.emissiveIntensity=gl[i].k*night}
  fxBL[id].forEach(b=>{const k=.55+.45*Math.sin(tm*3.2+b.g*1.9+(b.i%2)*1.2);b.m.color.copy(b.c).multiplyScalar(k);if(b.hm)b.hm.opacity=(.08+.5*night)*k});
  const cur=CH.cur,still=!CH.Q.length;
  // ของถือ / ผู้ร่วมกิจกรรม
@@ -1909,7 +1928,7 @@ function festFrame(dt){const id=festId();if(id!==FX.id)fxSet(id);FX.t+=dt;shootF
   for(let i=0;i<60;i++){slA[i]=Math.max(0,slA[i]-dt/1.3);slP[i*3+1]-=dt*.35*(slA[i]>0);const a=slA[i];slC[i*3]=a;slC[i*3+1]=a*.82;slC[i*3+2]=a*.4;if(a<=0)slP[i*3+1]=-9}slT.attributes.position.needsUpdate=true;slT.attributes.color.needsUpdate=true}
  else if(id=='ny'||id=='cny'){
   const h=hour(),cdOn=fxCountOn();
-  if(id=='ny'){ornFrame(nyLan,night);nyDeco.frame(dt,night);nyDeco2.frame(dt,night);balloons.forEach(b=>{b.g.rotation.z=Math.sin(tm*.9+b.ph)*.05;b.g.rotation.x=Math.cos(tm*.8+b.ph)*.05});
+  if(id=='ny'){ornFrame(nyLan,night);nyDeco.frame(dt,night);nyDeco2.frame(dt,night);balloons.forEach(b=>{b.bh.material.opacity=.05+.4*night;b.g.rotation.z=Math.sin(tm*.9+b.ph)*.05;b.g.rotation.x=Math.cos(tm*.8+b.ph)*.05});
    if(cdOn){const sc=h>=12?Math.ceil((24-h)*3600):0;if(sc!==FX.cd){FX.cd=sc;if(sc>0){showMsg(`🎆 ${sc}!`)}else{showMsg(_t("🎉🎆 สุขสันต์ปีใหม่ {0}!",FX.yr));FX.crazy=40}CH.msgT=0;if(sc<=0)CH.hopT=.0001}}}
   if(FX.crazy>0)FX.crazy-=dt;
   FX.fwT-=dt;const fwDay=id=='cny'&&night<=.25&&!FX.forced;if((night>.25||FX.forced||FX.crazy>0||fwDay)&&FX.fwT<=0){FX.fwT=FX.crazy>0?.35+Math.random()*.4:(id=='ny'?1.7:fwDay?4:1.7)+Math.random()*2.2;
@@ -2134,7 +2153,7 @@ function invFrame(dt){const I=INFO||{},t=tm,al=!!I.al,slp=CH.cur=='sleep'&&!al,b
  inv.position.x=-3.9+(al?Math.sin(t*45)*.012:0);inv.rotation.z=al?Math.sin(t*30)*.008:0;
  const pa=.5+.5*Math.sin(t*(al?14:low?7:chg?5:2)),ac=al?'#ff1744':low?'#ffab00':chg?'#00e676':'#00e5ff';antM.emissive.set(ac);antM.color.set(ac);antM.emissiveIntensity=slp?.15:.3+pa*1.1;
  ledP.emissiveIntensity=FL.pv.on?.5+.5*Math.sin(t*9)*.5+.35:.08;ledG.emissiveIntensity=FL.grid.on?.5+.5*Math.sin(t*7+1)*.5+.35:.08;ledL.emissiveIntensity=FL.bat.on?.5+.5*Math.sin(t*8+2)*.5+.35:.08;
- meterL.material.emissiveIntensity=FL.grid.on?.5+.5*Math.sin(t*8):.3;evLed.material.emissiveIntensity=FL.ev.on?.6+.4*Math.sin(t*6):.15;evPort.material.emissiveIntensity=FL.ev.on?.7+.5*Math.sin(t*6):.15;
+ meterL.material.emissiveIntensity=FL.grid.on?.5+.5*Math.sin(t*8):.3;evLed.material.emissiveIntensity=FL.ev.on?.6+.4*Math.sin(t*6):.15;evPort.material.emissiveIntensity=FL.ev.on?.7+.5*Math.sin(t*6):.15;devGlowFrame();
  ring.material.opacity=chg||dis?.18+.1*Math.sin(t*4):al?.25*Math.abs(Math.sin(t*6)):.04;ring.material.color.set(al?'#ff5252':chg?'#7cf29a':dis?'#ffb74d':'#80deea');ring.scale.setScalar(1+(chg||dis?((t*.6)%1)*.25:0));
  const full=soc!=null&&soc>=95&&!slp&&!chg&&!dis;
  spk.forEach((s,i)=>{const on=chg||dis||full;s.m.visible=on;if(!on)return;const p=(t*.45+s.ph)%1,a=i*2.4+t*.8;
