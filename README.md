@@ -6,7 +6,7 @@
 
 An animated 3D solar-house dashboard for Home Assistant. Works with **any** inverter, battery, grid meter or EV charger: you pick the Home Assistant entities yourself. Anything you leave empty is simply not shown.
 
-*Version 1.4.3 · 10 languages: ไทย, English, 中文, Tiếng Việt, Español, Deutsch, 日本語, 한국어, Français, Bahasa Indonesia*
+*Version 1.4.4 · 10 languages: ไทย, English, 中文, Tiếng Việt, Español, Deutsch, 日本語, 한국어, Français, Bahasa Indonesia*
 
 ## Features
 - 3D house with PV, battery, load, grid (import / export) and EV energy-flow lines
@@ -19,7 +19,7 @@ An animated 3D solar-house dashboard for Home Assistant. Works with **any** inve
 - Songkran: every 10 minutes on the clock (never later than 19:00) three cute neighbours come for either a water fight or a dance party in front of the speakers next to the mailbox (Sunny joins in), plus sand pagodas with flags, a spinning disco ball with sweeping colour lights over the sound system, ornament lanterns on both floors (marigold, jasmine garland, water drop, silver water bowl, lotus) and 7-colour bunting strung from the roof corners to bamboo poles all around the house
 - Chinese New Year: a glowing green Chinese dragon chasing its pearl across the sky (it lights up at night), firecracker strings hanging from the eaves of both floors that pop together with the firecracker pole, fireworks by day and night, fountain sparklers and a hand-held sparkler for Sunny
 - Halloween: pumpkin, ghost and bat lanterns on both floors, translucent, softly glowing floating ghosts that look just like the ghost lantern, Sunny dresses up as a vampire, bats instead of birds, a glowing pumpkin-head scarecrow with a crow, many styles of gravestones, and costumed kids coming for Trick or Treat every 10 minutes on the clock between 17:30 and 19:00
-- New Year: "HAPPY" lanterns on the upper floor and "NEW YEAR" lanterns on the lower floor, plus balloons and fireworks
+- New Year: "HAPPY" lanterns on the upper floor and "NEW YEAR" lanterns on the lower floor, gold/silver foil number balloons showing the new year, sparkler fountains along the path (at night), a champagne glass tower on a table, curly party streamers on the eaves, plus balloons and fireworks
 - Neighbours drop by every 10 minutes on the clock (daytime, never after 19:00) to chat with Sunny — 5 different conversations per neighbour (aunt and uncle each have their own topics) (solar & electricity bill, cooking, garden, EV, fishing, weather, ...) plus special festival greetings (Christmas, New Year, Chinese New Year, Songkran, Halloween); the festival banner on the roof only shows briefly when the app opens
 - Random shooting stars on clear nights, every day of the year
 - EV charging ring animation under the car, and a fountain in the fish pond
