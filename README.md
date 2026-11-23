@@ -6,7 +6,7 @@
 
 An animated 3D solar-house dashboard for Home Assistant. Works with **any** inverter, battery, grid meter or EV charger: you pick the Home Assistant entities yourself. Anything you leave empty is simply not shown.
 
-*Version 1.4.8 · 10 languages: ไทย, English, 中文, Tiếng Việt, Español, Deutsch, 日本語, 한국어, Français, Bahasa Indonesia*
+*Version 1.4.9 · 10 languages: ไทย, English, 中文, Tiếng Việt, Español, Deutsch, 日本語, 한국어, Français, Bahasa Indonesia*
 
 ## Features
 - 3D house with PV, battery, load, grid (import / export) and EV energy-flow lines
@@ -20,7 +20,7 @@ An animated 3D solar-house dashboard for Home Assistant. Works with **any** inve
 - Chinese New Year: a glowing green Chinese dragon chasing its pearl across the sky (it lights up at night), firecracker strings hanging from the eaves of both floors that pop together with the firecracker pole, fireworks by day and night, fountain sparklers and a hand-held sparkler for Sunny
 - Halloween: pumpkin, ghost and bat lanterns on both floors, translucent, softly glowing floating ghosts that look just like the ghost lantern, Sunny dresses up as a vampire, bats instead of birds, a glowing pumpkin-head scarecrow with a crow, many styles of gravestones, and costumed kids coming for Trick or Treat every 10 minutes on the clock between 17:30 and 19:00
 - New Year: "HAPPY" lanterns on the upper floor and "NEW YEAR" lanterns on the lower floor, gold/silver foil number balloons showing the new year, sparkler fountains along the path (at night), a champagne glass tower on a table, curly party streamers and twinkling fairy lights along the eaves, two piles of gift boxes, golden stars on the roof gables, plus balloons and fireworks
-- Neighbours drop by every 10 minutes on the clock (daytime, never after 19:00) to chat with Sunny — 5 different conversations per neighbour (aunt and uncle each have their own topics) (solar & electricity bill, cooking, garden, EV, fishing, weather, ...) plus special festival greetings (Christmas, New Year, Chinese New Year, Songkran, Halloween); the festival banner on the roof only shows briefly when the app opens
+- Neighbours drop by every 10 minutes on the clock (daytime, never after 19:00) to chat with Sunny — 8 different neighbours in random rotation (aunt, uncle, a jogging young woman, a delivery man with a parcel, a boy with a football, a girl with a teddy bear, and an elderly grandpa with a cane and grandma with flowers, each walking at their own pace), every one with their own conversations (solar & electricity bill, cooking, garden, EV, fishing, weather, mangoes, drawings, ...) plus special festival greetings (Christmas, New Year, Chinese New Year, Songkran, Halloween); the festival banner on the roof only shows briefly when the app opens
 - Random shooting stars on clear nights, every day of the year
 - Night glow: the inverter robot, EV charger/car and meter LEDs shine with soft halos and light pools after dark, and festival decorations (gift boxes, balloons, ornaments...) glow from within at night
 - EV charging ring animation under the car, and a fountain in the fish pond
